@@ -13,6 +13,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as IstorijaRouteImport } from './routes/istorija'
 import { Route as PrijavaRouteImport } from './routes/prijava'
+import { Route as ProfilRouteImport } from './routes/profil'
 import { Route as RegistracijaRouteImport } from './routes/registracija'
 import { Route as TreningRouteImport } from './routes/trening'
 
@@ -36,6 +37,11 @@ const PrijavaRoute = PrijavaRouteImport.update({
   path: '/prijava',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ProfilRoute = ProfilRouteImport.update({
+  id: '/profil',
+  path: '/profil',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const RegistracijaRoute = RegistracijaRouteImport.update({
   id: '/registracija',
   path: '/registracija',
@@ -52,6 +58,7 @@ export interface FileRoutesByFullPath {
   '/dashboard': typeof DashboardRoute
   '/istorija': typeof IstorijaRoute
   '/prijava': typeof PrijavaRoute
+  '/profil': typeof ProfilRoute
   '/registracija': typeof RegistracijaRoute
   '/trening': typeof TreningRoute
 }
@@ -60,6 +67,7 @@ export interface FileRoutesByTo {
   '/dashboard': typeof DashboardRoute
   '/istorija': typeof IstorijaRoute
   '/prijava': typeof PrijavaRoute
+  '/profil': typeof ProfilRoute
   '/registracija': typeof RegistracijaRoute
   '/trening': typeof TreningRoute
 }
@@ -69,22 +77,36 @@ export interface FileRoutesById {
   '/dashboard': typeof DashboardRoute
   '/istorija': typeof IstorijaRoute
   '/prijava': typeof PrijavaRoute
+  '/profil': typeof ProfilRoute
   '/registracija': typeof RegistracijaRoute
   '/trening': typeof TreningRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
-    '/' | '/dashboard' | '/istorija' | '/prijava' | '/registracija' | '/trening'
+    | '/'
+    | '/dashboard'
+    | '/istorija'
+    | '/prijava'
+    | '/profil'
+    | '/registracija'
+    | '/trening'
   fileRoutesByTo: FileRoutesByTo
   to:
-    '/' | '/dashboard' | '/istorija' | '/prijava' | '/registracija' | '/trening'
+    | '/'
+    | '/dashboard'
+    | '/istorija'
+    | '/prijava'
+    | '/profil'
+    | '/registracija'
+    | '/trening'
   id:
     | '__root__'
     | '/'
     | '/dashboard'
     | '/istorija'
     | '/prijava'
+    | '/profil'
     | '/registracija'
     | '/trening'
   fileRoutesById: FileRoutesById
@@ -94,6 +116,7 @@ export interface RootRouteChildren {
   DashboardRoute: typeof DashboardRoute
   IstorijaRoute: typeof IstorijaRoute
   PrijavaRoute: typeof PrijavaRoute
+  ProfilRoute: typeof ProfilRoute
   RegistracijaRoute: typeof RegistracijaRoute
   TreningRoute: typeof TreningRoute
 }
@@ -128,6 +151,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PrijavaRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/profil': {
+      id: '/profil'
+      path: '/profil'
+      fullPath: '/profil'
+      preLoaderRoute: typeof ProfilRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/registracija': {
       id: '/registracija'
       path: '/registracija'
@@ -150,6 +180,7 @@ const rootRouteChildren: RootRouteChildren = {
   DashboardRoute: DashboardRoute,
   IstorijaRoute: IstorijaRoute,
   PrijavaRoute: PrijavaRoute,
+  ProfilRoute: ProfilRoute,
   RegistracijaRoute: RegistracijaRoute,
   TreningRoute: TreningRoute,
 }
