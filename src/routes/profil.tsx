@@ -111,7 +111,7 @@ function Profile() {
         <div className="mt-4 h-64">
           {progress.length > 1 ? (
             <ResponsiveContainer width="100%" height="100%">
-              <LineChart data={progress} margin={{ left: -20, right: 8, top: 8 }}>
+              <LineChart data={progress} margin={{ left: 4, right: 8, top: 8 }}>
                 <CartesianGrid strokeDasharray="3 3" stroke="var(--color-border)" />
                 <XAxis dataKey="datum" stroke="var(--color-muted-foreground)" fontSize={12} />
                 <YAxis stroke="var(--color-muted-foreground)" fontSize={12} unit=" kg" />
@@ -146,7 +146,7 @@ function Profile() {
         <div className="mt-4 h-56">
           {volumeSeries.length > 1 ? (
             <ResponsiveContainer width="100%" height="100%">
-              <LineChart data={volumeSeries} margin={{ left: -10, right: 8, top: 8 }}>
+              <LineChart data={volumeSeries} margin={{ left: 4, right: 8, top: 8 }}>
                 <CartesianGrid strokeDasharray="3 3" stroke="var(--color-border)" />
                 <XAxis dataKey="datum" stroke="var(--color-muted-foreground)" fontSize={12} />
                 <YAxis stroke="var(--color-muted-foreground)" fontSize={12} />
