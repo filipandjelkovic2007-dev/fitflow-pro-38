@@ -8,26 +8,37 @@ import { Label } from "@/components/ui/label";
 import { useFitLog } from "@/lib/fitlog-store";
 
 export function AuthForm({ mode }: { mode: "login" | "register" }) {
-  const { login, user, ready } = useFitLog();
+  const { login, register, user, ready } = useFitLog();
   const navigate = useNavigate();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
+  // Ako je korisnik već prijavljen, vodi ga na kontrolnu tablu
   useEffect(() => {
     if (ready && user) navigate({ to: "/dashboard", replace: true });
   }, [ready, user, navigate]);
 
   const isRegister = mode === "register";
 
-  function submit(e: React.FormEvent) {
+  async function submit(e: React.FormEvent) {
     e.preventDefault();
-    if (!email.includes("@") || password.length < 4) {
-      setError("Unesi ispravan email i lozinku od bar 4 karaktera.");
+    setError("");
+    if (!email.includes("@") || password.length < 6) {
+      setError("Unesi ispravan email i lozinku od bar 6 karaktera.");
       return;
     }
-    login(email, isRegister ? name : undefined);
+    setLoading(true);
+    const message = isRegister
+      ? await register(email.trim(), password, name.trim())
+      : await login(email.trim(), password);
+    setLoading(false);
+    if (message) {
+      setError(message);
+      return;
+    }
     navigate({ to: "/dashboard", replace: true });
   }
 
@@ -67,6 +78,7 @@ export function AuthForm({ mode }: { mode: "login" | "register" }) {
             <Input
               id="email"
               type="email"
+              autoComplete="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="ti@primer.com"
@@ -77,14 +89,15 @@ export function AuthForm({ mode }: { mode: "login" | "register" }) {
             <Input
               id="password"
               type="password"
+              autoComplete={isRegister ? "new-password" : "current-password"}
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               placeholder="••••••"
             />
           </div>
           {error && <p className="text-sm text-destructive">{error}</p>}
-          <Button type="submit" className="w-full rounded-full font-bold">
-            {isRegister ? "Registruj se" : "Prijavi se"}
+          <Button type="submit" disabled={loading} className="w-full rounded-full font-bold">
+            {loading ? "Sačekaj…" : isRegister ? "Registruj se" : "Prijavi se"}
           </Button>
         </form>
 
@@ -106,9 +119,6 @@ export function AuthForm({ mode }: { mode: "login" | "register" }) {
           )}
         </p>
       </div>
-      <p className="mt-6 max-w-sm text-center text-xs text-muted-foreground">
-        Prototip: podaci se čuvaju lokalno u tvom pregledaču, bez pravog servera.
-      </p>
     </div>
   );
 }
