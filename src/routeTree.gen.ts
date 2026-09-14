@@ -11,8 +11,10 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as DashboardRouteImport } from './routes/dashboard'
+import { Route as IstorijaRouteImport } from './routes/istorija'
 import { Route as PrijavaRouteImport } from './routes/prijava'
 import { Route as RegistracijaRouteImport } from './routes/registracija'
+import { Route as TreningRouteImport } from './routes/trening'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -22,6 +24,11 @@ const IndexRoute = IndexRouteImport.update({
 const DashboardRoute = DashboardRouteImport.update({
   id: '/dashboard',
   path: '/dashboard',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const IstorijaRoute = IstorijaRouteImport.update({
+  id: '/istorija',
+  path: '/istorija',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PrijavaRoute = PrijavaRouteImport.update({
@@ -34,39 +41,61 @@ const RegistracijaRoute = RegistracijaRouteImport.update({
   path: '/registracija',
   getParentRoute: () => rootRouteImport,
 } as any)
+const TreningRoute = TreningRouteImport.update({
+  id: '/trening',
+  path: '/trening',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/dashboard': typeof DashboardRoute
+  '/istorija': typeof IstorijaRoute
   '/prijava': typeof PrijavaRoute
   '/registracija': typeof RegistracijaRoute
+  '/trening': typeof TreningRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/dashboard': typeof DashboardRoute
+  '/istorija': typeof IstorijaRoute
   '/prijava': typeof PrijavaRoute
   '/registracija': typeof RegistracijaRoute
+  '/trening': typeof TreningRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/dashboard': typeof DashboardRoute
+  '/istorija': typeof IstorijaRoute
   '/prijava': typeof PrijavaRoute
   '/registracija': typeof RegistracijaRoute
+  '/trening': typeof TreningRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/dashboard' | '/prijava' | '/registracija'
+  fullPaths:
+    '/' | '/dashboard' | '/istorija' | '/prijava' | '/registracija' | '/trening'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/dashboard' | '/prijava' | '/registracija'
-  id: '__root__' | '/' | '/dashboard' | '/prijava' | '/registracija'
+  to:
+    '/' | '/dashboard' | '/istorija' | '/prijava' | '/registracija' | '/trening'
+  id:
+    | '__root__'
+    | '/'
+    | '/dashboard'
+    | '/istorija'
+    | '/prijava'
+    | '/registracija'
+    | '/trening'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   DashboardRoute: typeof DashboardRoute
+  IstorijaRoute: typeof IstorijaRoute
   PrijavaRoute: typeof PrijavaRoute
   RegistracijaRoute: typeof RegistracijaRoute
+  TreningRoute: typeof TreningRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -85,6 +114,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashboardRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/istorija': {
+      id: '/istorija'
+      path: '/istorija'
+      fullPath: '/istorija'
+      preLoaderRoute: typeof IstorijaRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/prijava': {
       id: '/prijava'
       path: '/prijava'
@@ -99,14 +135,23 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof RegistracijaRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/trening': {
+      id: '/trening'
+      path: '/trening'
+      fullPath: '/trening'
+      preLoaderRoute: typeof TreningRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   DashboardRoute: DashboardRoute,
+  IstorijaRoute: IstorijaRoute,
   PrijavaRoute: PrijavaRoute,
   RegistracijaRoute: RegistracijaRoute,
+  TreningRoute: TreningRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
