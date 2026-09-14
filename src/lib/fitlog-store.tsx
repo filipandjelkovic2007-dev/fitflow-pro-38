@@ -177,7 +177,7 @@ export function FitLogProvider({ children }: { children: ReactNode }) {
       if (prev.user) return { ...prev, user: { ...prev.user, email } };
       const user: User = {
         id: uid(),
-        name: name?.trim() || email.split("@")[0],
+        name: name?.trim() || email.split("@")[0] || "Vežbač",
         email,
         created_at: new Date().toISOString(),
       };
