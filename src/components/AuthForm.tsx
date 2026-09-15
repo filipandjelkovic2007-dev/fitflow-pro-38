@@ -5,12 +5,13 @@ import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { useFitLog } from "@/lib/fitlog-store";
+import { useTrenLog } from "@/lib/fitlog-store";
 
 export function AuthForm({ mode }: { mode: "login" | "register" }) {
-  const { login, register, user, ready } = useFitLog();
+  const { login, register, user, ready } = useTrenLog();
   const navigate = useNavigate();
   const [name, setName] = useState("");
+  const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -23,16 +24,33 @@ export function AuthForm({ mode }: { mode: "login" | "register" }) {
 
   const isRegister = mode === "register";
 
-  async function submit(e: React.FormEvent) {
+  // Sprečava podrazumevano slanje forme (osvežavanje stranice)
+  function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
+    e.stopPropagation();
+    void submit();
+  }
+
+  async function submit() {
     setError("");
     if (!email.includes("@") || password.length < 6) {
       setError("Unesi ispravan email i lozinku od bar 6 karaktera.");
       return;
     }
+    if (isRegister) {
+      // Ime i prezime i korisničko ime su obavezni
+      if (name.trim().split(/\s+/).filter(Boolean).length < 2) {
+        setError("Unesi ime i prezime.");
+        return;
+      }
+      if (!/^[a-zA-Z0-9_.]{3,20}$/.test(username.trim())) {
+        setError("Korisničko ime: 3–20 znakova (slova, brojevi, _ ili .).");
+        return;
+      }
+    }
     setLoading(true);
     const message = isRegister
-      ? await register(email.trim(), password, name.trim())
+      ? await register(email.trim(), password, name.trim(), username.trim())
       : await login(email.trim(), password);
     setLoading(false);
     if (message) {
@@ -48,7 +66,7 @@ export function AuthForm({ mode }: { mode: "login" | "register" }) {
         <span className="grid h-10 w-10 place-items-center rounded-xl bg-primary text-primary-foreground">
           <Dumbbell className="h-5 w-5" />
         </span>
-        <span className="text-xl font-extrabold tracking-tight">FitLog</span>
+        <span className="text-xl font-extrabold tracking-tight">TrenLog</span>
       </Link>
 
       <div className="surface-card w-full max-w-sm p-6">
@@ -61,17 +79,34 @@ export function AuthForm({ mode }: { mode: "login" | "register" }) {
             : "Prijavi se i nastavi tamo gde si stao."}
         </p>
 
-        <form className="mt-6 space-y-4" onSubmit={submit}>
+        <form className="mt-6 space-y-4" noValidate onSubmit={onSubmit}>
           {isRegister && (
-            <div className="space-y-2">
-              <Label htmlFor="name">Ime</Label>
-              <Input
-                id="name"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                placeholder="Marko Marković"
-              />
-            </div>
+            <>
+              <div className="space-y-2">
+                <Label htmlFor="name">Ime i prezime *</Label>
+                <Input
+                  id="name"
+                  required
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  placeholder="Marko Marković"
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="username">Korisničko ime *</Label>
+                <Input
+                  id="username"
+                  required
+                  autoComplete="username"
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value)}
+                  placeholder="marko_m"
+                />
+                <p className="text-xs text-muted-foreground">
+                  Mora biti jedinstveno — ne može se ponavljati kod drugih vežbača.
+                </p>
+              </div>
+            </>
           )}
           <div className="space-y-2">
             <Label htmlFor="email">Email</Label>

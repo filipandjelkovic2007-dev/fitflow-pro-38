@@ -2,7 +2,7 @@ import { Link, useNavigate } from "@tanstack/react-router";
 import { Dumbbell, History, LayoutDashboard, LogOut, Plus, User, Users } from "lucide-react";
 import { useEffect, type ReactNode } from "react";
 
-import { useFitLog } from "@/lib/fitlog-store";
+import { useTrenLog } from "@/lib/fitlog-store";
 import { Button } from "@/components/ui/button";
 
 const NAV = [
@@ -14,7 +14,7 @@ const NAV = [
 ] as const;
 
 export function AppShell({ children }: { children: ReactNode }) {
-  const { user, ready, logout } = useFitLog();
+  const { user, ready, logout } = useTrenLog();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -37,7 +37,7 @@ export function AppShell({ children }: { children: ReactNode }) {
             <span className="grid h-9 w-9 shrink-0 place-items-center rounded-xl bg-primary text-primary-foreground">
               <Dumbbell className="h-5 w-5" />
             </span>
-            <span className="truncate text-lg font-extrabold tracking-tight">FitLog</span>
+            <span className="truncate text-lg font-extrabold tracking-tight">TrenLog</span>
           </Link>
           <div className="flex items-center gap-1">
             <nav className="mr-2 hidden items-center gap-1 md:flex">

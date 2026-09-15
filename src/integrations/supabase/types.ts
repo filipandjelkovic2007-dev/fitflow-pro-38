@@ -47,18 +47,21 @@ export type Database = {
           email: string | null
           id: string
           name: string
+          username: string
         }
         Insert: {
           created_at?: string
           email?: string | null
           id: string
           name?: string
+          username: string
         }
         Update: {
           created_at?: string
           email?: string | null
           id?: string
           name?: string
+          username?: string
         }
         Relationships: []
       }
@@ -139,7 +142,7 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      username_available: { Args: { _username: string }; Returns: boolean }
     }
     Enums: {
       [_ in never]: never

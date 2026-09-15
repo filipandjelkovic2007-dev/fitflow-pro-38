@@ -43,6 +43,7 @@ export type Profile = {
   id: string;
   name: string;
   email: string | null;
+  username: string;
   created_at: string;
 };
 
@@ -59,17 +60,22 @@ type Ctx = {
   exercises: Exercise[];
   workouts: Workout[];
   ready: boolean;
-  register: (email: string, password: string, name: string) => Promise<string | null>;
+  register: (
+    email: string,
+    password: string,
+    name: string,
+    username: string,
+  ) => Promise<string | null>;
   login: (email: string, password: string) => Promise<string | null>;
   logout: () => Promise<void>;
-  updateProfile: (name: string, email: string) => Promise<string | null>;
+  updateProfile: (name: string, email: string, username: string) => Promise<string | null>;
   addExercise: (name: string, category: string) => Promise<Exercise | null>;
   addWorkout: (w: NewWorkout) => Promise<string | null>;
   deleteWorkout: (id: string) => Promise<string | null>;
   refresh: () => Promise<void>;
 };
 
-const FitLogContext = createContext<Ctx | null>(null);
+const TrenLogContext = createContext<Ctx | null>(null);
 
 // Spaja treninge sa pripadajućim serijama u jedan objekat
 function mergeWorkouts(
@@ -112,7 +118,7 @@ export async function fetchWorkoutsForUser(userId: string): Promise<Workout[]> {
 export async function fetchProfiles(): Promise<Profile[]> {
   const { data } = await supabase
     .from("profiles")
-    .select("id, name, email, created_at")
+    .select("id, name, email, username, created_at")
     .order("created_at", { ascending: true });
   return (data ?? []) as Profile[];
 }
@@ -121,7 +127,7 @@ export async function fetchProfiles(): Promise<Profile[]> {
 export async function fetchProfile(id: string): Promise<Profile | null> {
   const { data } = await supabase
     .from("profiles")
-    .select("id, name, email, created_at")
+    .select("id, name, email, username, created_at")
     .eq("id", id)
     .maybeSingle();
   return (data as Profile) ?? null;
@@ -137,7 +143,7 @@ export async function fetchExercises(): Promise<Exercise[]> {
   return (data ?? []) as Exercise[];
 }
 
-export function FitLogProvider({ children }: { children: ReactNode }) {
+export function TrenLogProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<Profile | null>(null);
   const [exercises, setExercises] = useState<Exercise[]>([]);
   const [workouts, setWorkouts] = useState<Workout[]>([]);
@@ -195,19 +201,29 @@ export function FitLogProvider({ children }: { children: ReactNode }) {
   }, [loadAll]);
 
   // Registracija novog korisnika (profil kreira okidač u bazi)
-  const register = useCallback(async (email: string, password: string, name: string) => {
-    const { data, error } = await supabase.auth.signUp({
-      email,
-      password,
-      options: {
-        emailRedirectTo: window.location.origin,
-        data: { name },
-      },
-    });
-    if (error) return error.message;
-    if (!data.session) return "Proveri email i potvrdi nalog pre prijave.";
-    return null;
-  }, []);
+  const register = useCallback(
+    async (email: string, password: string, name: string, username: string) => {
+      // Provera da li je korisničko ime već zauzeto
+      const { data: free, error: checkError } = await supabase.rpc("username_available", {
+        _username: username,
+      });
+      if (checkError) return checkError.message;
+      if (!free) return "Korisničko ime je već zauzeto. Izaberi drugo.";
+
+      const { data, error } = await supabase.auth.signUp({
+        email,
+        password,
+        options: {
+          emailRedirectTo: window.location.origin,
+          data: { name, username },
+        },
+      });
+      if (error) return error.message;
+      if (!data.session) return "Proveri email i potvrdi nalog pre prijave.";
+      return null;
+    },
+    [],
+  );
 
   // Prijava postojećeg korisnika
   const login = useCallback(async (email: string, password: string) => {
@@ -225,16 +241,21 @@ export function FitLogProvider({ children }: { children: ReactNode }) {
   }, []);
 
   // Izmena podataka profila
-  const updateProfile = useCallback(async (name: string, email: string) => {
+  const updateProfile = useCallback(async (name: string, email: string, username: string) => {
     const id = userIdRef.current;
     if (!id) return "Nisi prijavljen.";
     const { data, error } = await supabase
       .from("profiles")
-      .update({ name, email })
+      .update({ name, email, username })
       .eq("id", id)
-      .select("id, name, email, created_at")
+      .select("id, name, email, username, created_at")
       .maybeSingle();
-    if (error) return error.message;
+    if (error) {
+      // 23505 = kršenje jedinstvenosti korisničkog imena
+      return error.code === "23505"
+        ? "Korisničko ime je već zauzeto. Izaberi drugo."
+        : error.message;
+    }
     if (data) setUser(data as Profile);
     return null;
   }, []);
@@ -327,12 +348,12 @@ export function FitLogProvider({ children }: { children: ReactNode }) {
     ],
   );
 
-  return <FitLogContext.Provider value={value}>{children}</FitLogContext.Provider>;
+  return <TrenLogContext.Provider value={value}>{children}</TrenLogContext.Provider>;
 }
 
-export function useFitLog() {
-  const ctx = useContext(FitLogContext);
-  if (!ctx) throw new Error("useFitLog mora da se koristi unutar FitLogProvider-a");
+export function useTrenLog() {
+  const ctx = useContext(TrenLogContext);
+  if (!ctx) throw new Error("useTrenLog mora da se koristi unutar TrenLogProvider-a");
   return ctx;
 }
 

@@ -17,9 +17,9 @@ import {
 export const Route = createFileRoute("/vezbaci/$id")({
   head: () => ({
     meta: [
-      { title: "Treninzi vežbača — FitLog" },
+      { title: "Treninzi vežbača — TrenLog" },
       { name: "description", content: "Detaljan spisak treninga izabranog vežbača." },
-      { property: "og:title", content: "Treninzi vežbača — FitLog" },
+      { property: "og:title", content: "Treninzi vežbača — TrenLog" },
       { property: "og:description", content: "Detaljan spisak treninga izabranog vežbača." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
@@ -70,6 +70,9 @@ function UserDetail() {
 
       <div>
         <h1 className="text-3xl font-black tracking-tight">{profile?.name ?? "Vežbač"}</h1>
+        {profile?.username && (
+          <p className="text-sm text-primary">@{profile.username}</p>
+        )}
         <p className="mt-1 text-sm text-muted-foreground">
           {workouts?.length ?? 0} treninga · {Math.round(total).toLocaleString("sr-RS")} kg ukupnog
           volumena

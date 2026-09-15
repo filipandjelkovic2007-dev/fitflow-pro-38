@@ -22,14 +22,14 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { useFitLog, volumeOf } from "@/lib/fitlog-store";
+import { useTrenLog, volumeOf } from "@/lib/fitlog-store";
 
 export const Route = createFileRoute("/profil")({
   head: () => ({
     meta: [
-      { title: "Profil i statistika — FitLog" },
+      { title: "Profil i statistika — TrenLog" },
       { name: "description", content: "Grafikoni napretka snage i podešavanja profila." },
-      { property: "og:title", content: "Profil i statistika — FitLog" },
+      { property: "og:title", content: "Profil i statistika — TrenLog" },
       { property: "og:description", content: "Grafikoni napretka snage i podešavanja profila." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
@@ -43,15 +43,17 @@ export const Route = createFileRoute("/profil")({
 });
 
 function Profile() {
-  const { user, workouts, exercises, updateProfile } = useFitLog();
+  const { user, workouts, exercises, updateProfile } = useTrenLog();
   const [name, setName] = useState(user?.name ?? "");
   const [email, setEmail] = useState(user?.email ?? "");
+  const [username, setUsername] = useState(user?.username ?? "");
 
   // Kada se profil učita iz baze, popuni polja
   useEffect(() => {
     if (!user) return;
     setName(user.name);
     setEmail(user.email ?? "");
+    setUsername(user.username ?? "");
   }, [user]);
 
   const usedExercises = useMemo(() => {
@@ -187,18 +189,26 @@ function Profile() {
         <h2 className="text-lg font-bold">Podešavanja profila</h2>
         <div className="grid gap-4 sm:grid-cols-2">
           <div className="space-y-2">
-            <Label htmlFor="pname">Ime</Label>
+            <Label htmlFor="pname">Ime i prezime</Label>
             <Input id="pname" value={name} onChange={(e) => setName(e.target.value)} />
           </div>
           <div className="space-y-2">
             <Label htmlFor="pemail">Email</Label>
             <Input id="pemail" value={email} onChange={(e) => setEmail(e.target.value)} />
           </div>
+          <div className="space-y-2">
+            <Label htmlFor="pusername">Korisničko ime</Label>
+            <Input
+              id="pusername"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+            />
+          </div>
         </div>
         <Button
           className="rounded-full font-bold"
           onClick={() => {
-            void updateProfile(name, email).then((error) =>
+            void updateProfile(name.trim(), email.trim(), username.trim()).then((error) =>
               error ? toast.error(error) : toast.success("Profil sačuvan."),
             );
           }}

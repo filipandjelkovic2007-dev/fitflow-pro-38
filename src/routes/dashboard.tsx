@@ -2,14 +2,14 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { CalendarDays, Dumbbell, Flame, Plus, TrendingUp } from "lucide-react";
 
 import { AppShell } from "@/components/AppShell";
-import { formatDate, useFitLog, volumeOf } from "@/lib/fitlog-store";
+import { formatDate, useTrenLog, volumeOf } from "@/lib/fitlog-store";
 
 export const Route = createFileRoute("/dashboard")({
   head: () => ({
     meta: [
-      { title: "Kontrolna tabla — FitLog" },
+      { title: "Kontrolna tabla — TrenLog" },
       { name: "description", content: "Brza statistika tvojih treninga i volumena." },
-      { property: "og:title", content: "Kontrolna tabla — FitLog" },
+      { property: "og:title", content: "Kontrolna tabla — TrenLog" },
       { property: "og:description", content: "Brza statistika tvojih treninga i volumena." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
@@ -23,7 +23,7 @@ export const Route = createFileRoute("/dashboard")({
 });
 
 function Dashboard() {
-  const { user, workouts, exercises } = useFitLog();
+  const { user, workouts, exercises } = useTrenLog();
 
   const sorted = [...workouts].sort((a, b) => +new Date(b.date) - +new Date(a.date));
   const weekAgo = Date.now() - 7 * 86400000;

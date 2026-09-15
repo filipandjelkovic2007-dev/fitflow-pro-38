@@ -11,7 +11,7 @@ import { useEffect, type ReactNode } from "react";
 
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
-import { FitLogProvider } from "../lib/fitlog-store";
+import { TrenLogProvider } from "../lib/fitlog-store";
 import { Toaster } from "../components/ui/sonner";
 
 function NotFoundComponent() {
@@ -79,10 +79,10 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "FitLog — Evidencija treninga" },
+      { title: "TrenLog — Evidencija treninga" },
       {
         name: "description",
-        content: "FitLog: beleži serije, težine i ponavljanja i prati napredak u teretani.",
+        content: "TrenLog: beleži serije, težine i ponavljanja i prati napredak u teretani.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
@@ -126,11 +126,11 @@ function RootComponent() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <FitLogProvider>
+      <TrenLogProvider>
         {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
         <Outlet />
         <Toaster />
-      </FitLogProvider>
+      </TrenLogProvider>
     </QueryClientProvider>
   );
 }
