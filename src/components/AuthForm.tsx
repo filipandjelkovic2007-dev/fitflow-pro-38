@@ -11,6 +11,7 @@ export function AuthForm({ mode }: { mode: "login" | "register" }) {
   const { login, register, user, ready } = useTrenLog();
   const navigate = useNavigate();
   const [name, setName] = useState("");
+  const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
