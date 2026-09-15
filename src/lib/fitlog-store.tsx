@@ -112,7 +112,7 @@ export async function fetchWorkoutsForUser(userId: string): Promise<Workout[]> {
 export async function fetchProfiles(): Promise<Profile[]> {
   const { data } = await supabase
     .from("profiles")
-    .select("id, name, email, created_at")
+    .select("id, name, email, username, created_at")
     .order("created_at", { ascending: true });
   return (data ?? []) as Profile[];
 }
@@ -121,7 +121,7 @@ export async function fetchProfiles(): Promise<Profile[]> {
 export async function fetchProfile(id: string): Promise<Profile | null> {
   const { data } = await supabase
     .from("profiles")
-    .select("id, name, email, created_at")
+    .select("id, name, email, username, created_at")
     .eq("id", id)
     .maybeSingle();
   return (data as Profile) ?? null;
@@ -232,7 +232,7 @@ export function TrenLogProvider({ children }: { children: ReactNode }) {
       .from("profiles")
       .update({ name, email })
       .eq("id", id)
-      .select("id, name, email, created_at")
+      .select("id, name, email, username, created_at")
       .maybeSingle();
     if (error) return error.message;
     if (data) setUser(data as Profile);
