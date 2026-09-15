@@ -177,11 +177,16 @@ function NewWorkout() {
             className="rounded-full"
             onClick={() => {
               if (!customName.trim()) return;
-              const ex = addExercise(customName.trim(), customCat.trim() || "Ostalo");
-              addItem(ex.id);
-              setCustomName("");
-              setCustomCat("");
-              toast.success("Vežba kreirana i dodata.");
+              void addExercise(customName.trim(), customCat.trim() || "Ostalo").then((ex) => {
+                if (!ex) {
+                  toast.error("Vežba nije sačuvana.");
+                  return;
+                }
+                addItem(ex.id);
+                setCustomName("");
+                setCustomCat("");
+                toast.success("Vežba kreirana i dodata.");
+              });
             }}
           >
             Kreiraj
@@ -250,8 +255,12 @@ function NewWorkout() {
         );
       })}
 
-      <Button className="glow-neon w-full rounded-full py-6 text-base font-black" onClick={save}>
-        <Check className="h-5 w-5" /> Sačuvaj trening
+      <Button
+        className="glow-neon w-full rounded-full py-6 text-base font-black"
+        disabled={saving}
+        onClick={() => void save()}
+      >
+        <Check className="h-5 w-5" /> {saving ? "Čuvanje…" : "Sačuvaj trening"}
       </Button>
     </div>
   );
