@@ -31,9 +31,20 @@ export function AuthForm({ mode }: { mode: "login" | "register" }) {
       setError("Unesi ispravan email i lozinku od bar 6 karaktera.");
       return;
     }
+    if (isRegister) {
+      // Ime i prezime i korisničko ime su obavezni
+      if (name.trim().split(/\s+/).filter(Boolean).length < 2) {
+        setError("Unesi ime i prezime.");
+        return;
+      }
+      if (!/^[a-zA-Z0-9_.]{3,20}$/.test(username.trim())) {
+        setError("Korisničko ime: 3–20 znakova (slova, brojevi, _ ili .).");
+        return;
+      }
+    }
     setLoading(true);
     const message = isRegister
-      ? await register(email.trim(), password, name.trim())
+      ? await register(email.trim(), password, name.trim(), username.trim())
       : await login(email.trim(), password);
     setLoading(false);
     if (message) {
