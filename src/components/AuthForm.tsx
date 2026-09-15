@@ -5,10 +5,10 @@ import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { useFitLog } from "@/lib/fitlog-store";
+import { useTrenLog } from "@/lib/fitlog-store";
 
 export function AuthForm({ mode }: { mode: "login" | "register" }) {
-  const { login, register, user, ready } = useFitLog();
+  const { login, register, user, ready } = useTrenLog();
   const navigate = useNavigate();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -48,7 +48,7 @@ export function AuthForm({ mode }: { mode: "login" | "register" }) {
         <span className="grid h-10 w-10 place-items-center rounded-xl bg-primary text-primary-foreground">
           <Dumbbell className="h-5 w-5" />
         </span>
-        <span className="text-xl font-extrabold tracking-tight">FitLog</span>
+        <span className="text-xl font-extrabold tracking-tight">TrenLog</span>
       </Link>
 
       <div className="surface-card w-full max-w-sm p-6">

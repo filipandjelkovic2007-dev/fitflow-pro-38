@@ -4,13 +4,13 @@ import { Activity, Dumbbell, LineChart, Timer } from "lucide-react";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "FitLog — Evidencija treninga i napretka u teretani" },
+      { title: "TrenLog — Evidencija treninga i napretka u teretani" },
       {
         name: "description",
         content:
-          "FitLog je jednostavna aplikacija za evidenciju treninga: beleži serije, težine i ponavljanja i prati napredak kroz grafikone.",
+          "TrenLog je jednostavna aplikacija za evidenciju treninga: beleži serije, težine i ponavljanja i prati napredak kroz grafikone.",
       },
-      { property: "og:title", content: "FitLog — Evidencija treninga i napretka" },
+      { property: "og:title", content: "TrenLog — Evidencija treninga i napretka" },
       {
         property: "og:description",
         content: "Beleži serije, težine i ponavljanja. Prati napredak i ostani motivisan.",
@@ -53,7 +53,7 @@ function Landing() {
           <span className="grid h-9 w-9 place-items-center rounded-xl bg-primary text-primary-foreground">
             <Dumbbell className="h-5 w-5" />
           </span>
-          <span className="text-lg font-extrabold tracking-tight">FitLog</span>
+          <span className="text-lg font-extrabold tracking-tight">TrenLog</span>
         </div>
         <Link
           to="/prijava"
@@ -73,7 +73,7 @@ function Landing() {
           Zabeleži je.
         </h1>
         <p className="mt-5 max-w-xl text-base text-muted-foreground sm:text-lg">
-          FitLog pamti tvoje težine, ponavljanja i volumen treninga, pa ti tačno pokazuje
+          TrenLog pamti tvoje težine, ponavljanja i volumen treninga, pa ti tačno pokazuje
           koliko si jači nego prošlog meseca.
         </p>
         <div className="mt-8 flex flex-col gap-3 sm:flex-row">
@@ -106,7 +106,7 @@ function Landing() {
       </section>
 
       <section className="mx-auto max-w-5xl px-4 pb-20">
-        <h2 className="text-2xl font-bold tracking-tight">Zašto FitLog</h2>
+        <h2 className="text-2xl font-bold tracking-tight">Zašto TrenLog</h2>
         <div className="mt-6 grid gap-4 sm:grid-cols-2">
           {FEATURES.map((f) => {
             const Icon = f.icon;
@@ -122,7 +122,7 @@ function Landing() {
       </section>
 
       <footer className="border-t border-border/60 py-8 text-center text-sm text-muted-foreground">
-        FitLog — prototip aplikacije za evidenciju treninga.
+        TrenLog — prototip aplikacije za evidenciju treninga.
       </footer>
     </div>
   );

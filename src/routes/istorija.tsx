@@ -13,14 +13,14 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { formatDate, useFitLog, volumeOf } from "@/lib/fitlog-store";
+import { formatDate, useTrenLog, volumeOf } from "@/lib/fitlog-store";
 
 export const Route = createFileRoute("/istorija")({
   head: () => ({
     meta: [
-      { title: "Istorija treninga — FitLog" },
+      { title: "Istorija treninga — TrenLog" },
       { name: "description", content: "Hronološki pregled svih tvojih treninga." },
-      { property: "og:title", content: "Istorija treninga — FitLog" },
+      { property: "og:title", content: "Istorija treninga — TrenLog" },
       { property: "og:description", content: "Hronološki pregled svih tvojih treninga." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
@@ -34,7 +34,7 @@ export const Route = createFileRoute("/istorija")({
 });
 
 function HistoryPage() {
-  const { workouts, exercises, deleteWorkout } = useFitLog();
+  const { workouts, exercises, deleteWorkout } = useTrenLog();
   const [from, setFrom] = useState("");
   const [type, setType] = useState("all");
   const [open, setOpen] = useState<string | null>(null);

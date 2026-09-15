@@ -69,7 +69,7 @@ type Ctx = {
   refresh: () => Promise<void>;
 };
 
-const FitLogContext = createContext<Ctx | null>(null);
+const TrenLogContext = createContext<Ctx | null>(null);
 
 // Spaja treninge sa pripadajućim serijama u jedan objekat
 function mergeWorkouts(
@@ -137,7 +137,7 @@ export async function fetchExercises(): Promise<Exercise[]> {
   return (data ?? []) as Exercise[];
 }
 
-export function FitLogProvider({ children }: { children: ReactNode }) {
+export function TrenLogProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<Profile | null>(null);
   const [exercises, setExercises] = useState<Exercise[]>([]);
   const [workouts, setWorkouts] = useState<Workout[]>([]);
@@ -327,12 +327,12 @@ export function FitLogProvider({ children }: { children: ReactNode }) {
     ],
   );
 
-  return <FitLogContext.Provider value={value}>{children}</FitLogContext.Provider>;
+  return <TrenLogContext.Provider value={value}>{children}</TrenLogContext.Provider>;
 }
 
-export function useFitLog() {
-  const ctx = useContext(FitLogContext);
-  if (!ctx) throw new Error("useFitLog mora da se koristi unutar FitLogProvider-a");
+export function useTrenLog() {
+  const ctx = useContext(TrenLogContext);
+  if (!ctx) throw new Error("useTrenLog mora da se koristi unutar TrenLogProvider-a");
   return ctx;
 }
 

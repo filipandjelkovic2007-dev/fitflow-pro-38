@@ -15,14 +15,14 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { useFitLog, type NewWorkout as NewWorkoutData } from "@/lib/fitlog-store";
+import { useTrenLog, type NewWorkout as NewWorkoutData } from "@/lib/fitlog-store";
 
 export const Route = createFileRoute("/trening")({
   head: () => ({
     meta: [
-      { title: "Novi trening — FitLog" },
+      { title: "Novi trening — TrenLog" },
       { name: "description", content: "Unesi vežbe, serije, kilažu i ponavljanja." },
-      { property: "og:title", content: "Novi trening — FitLog" },
+      { property: "og:title", content: "Novi trening — TrenLog" },
       { property: "og:description", content: "Unesi vežbe, serije, kilažu i ponavljanja." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
@@ -41,7 +41,7 @@ type DraftExercise = { key: string; exercise_id: string; sets: DraftSet[] };
 const uid = () => Math.random().toString(36).slice(2, 10);
 
 function NewWorkout() {
-  const { exercises, addExercise, addWorkout } = useFitLog();
+  const { exercises, addExercise, addWorkout } = useTrenLog();
   const navigate = useNavigate();
 
   const [name, setName] = useState("Trening A");

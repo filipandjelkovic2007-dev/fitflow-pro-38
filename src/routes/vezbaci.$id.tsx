@@ -17,9 +17,9 @@ import {
 export const Route = createFileRoute("/vezbaci/$id")({
   head: () => ({
     meta: [
-      { title: "Treninzi vežbača — FitLog" },
+      { title: "Treninzi vežbača — TrenLog" },
       { name: "description", content: "Detaljan spisak treninga izabranog vežbača." },
-      { property: "og:title", content: "Treninzi vežbača — FitLog" },
+      { property: "og:title", content: "Treninzi vežbača — TrenLog" },
       { property: "og:description", content: "Detaljan spisak treninga izabranog vežbača." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },

@@ -8,12 +8,12 @@ import { fetchProfiles, formatDate, type Profile } from "@/lib/fitlog-store";
 export const Route = createFileRoute("/vezbaci/")({
   head: () => ({
     meta: [
-      { title: "Vežbači — FitLog" },
-      { name: "description", content: "Spisak svih vežbača koji beleže treninge u FitLog-u." },
-      { property: "og:title", content: "Vežbači — FitLog" },
+      { title: "Vežbači — TrenLog" },
+      { name: "description", content: "Spisak svih vežbača koji beleže treninge u TrenLog-u." },
+      { property: "og:title", content: "Vežbači — TrenLog" },
       {
         property: "og:description",
-        content: "Spisak svih vežbača koji beleže treninge u FitLog-u.",
+        content: "Spisak svih vežbača koji beleže treninge u TrenLog-u.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },

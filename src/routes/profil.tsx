@@ -22,14 +22,14 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { useFitLog, volumeOf } from "@/lib/fitlog-store";
+import { useTrenLog, volumeOf } from "@/lib/fitlog-store";
 
 export const Route = createFileRoute("/profil")({
   head: () => ({
     meta: [
-      { title: "Profil i statistika — FitLog" },
+      { title: "Profil i statistika — TrenLog" },
       { name: "description", content: "Grafikoni napretka snage i podešavanja profila." },
-      { property: "og:title", content: "Profil i statistika — FitLog" },
+      { property: "og:title", content: "Profil i statistika — TrenLog" },
       { property: "og:description", content: "Grafikoni napretka snage i podešavanja profila." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
@@ -43,7 +43,7 @@ export const Route = createFileRoute("/profil")({
 });
 
 function Profile() {
-  const { user, workouts, exercises, updateProfile } = useFitLog();
+  const { user, workouts, exercises, updateProfile } = useTrenLog();
   const [name, setName] = useState(user?.name ?? "");
   const [email, setEmail] = useState(user?.email ?? "");
 
