@@ -16,6 +16,8 @@ import { Route as PrijavaRouteImport } from './routes/prijava'
 import { Route as ProfilRouteImport } from './routes/profil'
 import { Route as RegistracijaRouteImport } from './routes/registracija'
 import { Route as TreningRouteImport } from './routes/trening'
+import { Route as VezbaciIndexRouteImport } from './routes/vezbaci.index'
+import { Route as VezbaciIdRouteImport } from './routes/vezbaci.$id'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -52,6 +54,16 @@ const TreningRoute = TreningRouteImport.update({
   path: '/trening',
   getParentRoute: () => rootRouteImport,
 } as any)
+const VezbaciIndexRoute = VezbaciIndexRouteImport.update({
+  id: '/vezbaci/',
+  path: '/vezbaci/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const VezbaciIdRoute = VezbaciIdRouteImport.update({
+  id: '/vezbaci/$id',
+  path: '/vezbaci/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -61,6 +73,8 @@ export interface FileRoutesByFullPath {
   '/profil': typeof ProfilRoute
   '/registracija': typeof RegistracijaRoute
   '/trening': typeof TreningRoute
+  '/vezbaci/$id': typeof VezbaciIdRoute
+  '/vezbaci/': typeof VezbaciIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -70,6 +84,8 @@ export interface FileRoutesByTo {
   '/profil': typeof ProfilRoute
   '/registracija': typeof RegistracijaRoute
   '/trening': typeof TreningRoute
+  '/vezbaci/$id': typeof VezbaciIdRoute
+  '/vezbaci': typeof VezbaciIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -80,6 +96,8 @@ export interface FileRoutesById {
   '/profil': typeof ProfilRoute
   '/registracija': typeof RegistracijaRoute
   '/trening': typeof TreningRoute
+  '/vezbaci/$id': typeof VezbaciIdRoute
+  '/vezbaci/': typeof VezbaciIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -91,6 +109,8 @@ export interface FileRouteTypes {
     | '/profil'
     | '/registracija'
     | '/trening'
+    | '/vezbaci/$id'
+    | '/vezbaci/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -100,6 +120,8 @@ export interface FileRouteTypes {
     | '/profil'
     | '/registracija'
     | '/trening'
+    | '/vezbaci/$id'
+    | '/vezbaci'
   id:
     | '__root__'
     | '/'
@@ -109,6 +131,8 @@ export interface FileRouteTypes {
     | '/profil'
     | '/registracija'
     | '/trening'
+    | '/vezbaci/$id'
+    | '/vezbaci/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -119,6 +143,8 @@ export interface RootRouteChildren {
   ProfilRoute: typeof ProfilRoute
   RegistracijaRoute: typeof RegistracijaRoute
   TreningRoute: typeof TreningRoute
+  VezbaciIdRoute: typeof VezbaciIdRoute
+  VezbaciIndexRoute: typeof VezbaciIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -172,6 +198,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof TreningRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/vezbaci/': {
+      id: '/vezbaci/'
+      path: '/vezbaci'
+      fullPath: '/vezbaci/'
+      preLoaderRoute: typeof VezbaciIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/vezbaci/$id': {
+      id: '/vezbaci/$id'
+      path: '/vezbaci/$id'
+      fullPath: '/vezbaci/$id'
+      preLoaderRoute: typeof VezbaciIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -183,6 +223,8 @@ const rootRouteChildren: RootRouteChildren = {
   ProfilRoute: ProfilRoute,
   RegistracijaRoute: RegistracijaRoute,
   TreningRoute: TreningRoute,
+  VezbaciIdRoute: VezbaciIdRoute,
+  VezbaciIndexRoute: VezbaciIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

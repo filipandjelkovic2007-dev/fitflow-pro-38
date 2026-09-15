@@ -123,8 +123,9 @@ function HistoryPage() {
                   size="icon"
                   aria-label="Obriši trening"
                   onClick={() => {
-                    deleteWorkout(w.id);
-                    toast.success("Trening obrisan.");
+                    void deleteWorkout(w.id).then((error) =>
+                      error ? toast.error(error) : toast.success("Trening obrisan."),
+                    );
                   }}
                 >
                   <Trash2 className="h-4 w-4 text-destructive" />
