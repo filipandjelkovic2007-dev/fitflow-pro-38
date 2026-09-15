@@ -241,12 +241,12 @@ export function TrenLogProvider({ children }: { children: ReactNode }) {
   }, []);
 
   // Izmena podataka profila
-  const updateProfile = useCallback(async (name: string, email: string) => {
+  const updateProfile = useCallback(async (name: string, email: string, username: string) => {
     const id = userIdRef.current;
     if (!id) return "Nisi prijavljen.";
     const { data, error } = await supabase
       .from("profiles")
-      .update({ name, email })
+      .update({ name, email, username })
       .eq("id", id)
       .select("id, name, email, username, created_at")
       .maybeSingle();
