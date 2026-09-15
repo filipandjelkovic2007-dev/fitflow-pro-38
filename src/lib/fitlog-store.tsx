@@ -250,7 +250,12 @@ export function TrenLogProvider({ children }: { children: ReactNode }) {
       .eq("id", id)
       .select("id, name, email, username, created_at")
       .maybeSingle();
-    if (error) return error.message;
+    if (error) {
+      // 23505 = kršenje jedinstvenosti korisničkog imena
+      return error.code === "23505"
+        ? "Korisničko ime je već zauzeto. Izaberi drugo."
+        : error.message;
+    }
     if (data) setUser(data as Profile);
     return null;
   }, []);
