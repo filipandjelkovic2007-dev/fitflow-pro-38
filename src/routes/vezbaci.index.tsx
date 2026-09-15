@@ -65,7 +65,7 @@ function UsersPage() {
             <span className="min-w-0">
               <span className="block truncate font-bold">{p.name}</span>
               <span className="block truncate text-xs text-muted-foreground">
-                Član od {formatDate(p.created_at)}
+                @{p.username} · Član od {formatDate(p.created_at)}
               </span>
             </span>
             <ChevronRight className="h-4 w-4 text-muted-foreground" />
