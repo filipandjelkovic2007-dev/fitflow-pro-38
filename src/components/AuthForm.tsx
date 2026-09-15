@@ -24,8 +24,14 @@ export function AuthForm({ mode }: { mode: "login" | "register" }) {
 
   const isRegister = mode === "register";
 
-  async function submit(e: React.FormEvent) {
+  // Sprečava podrazumevano slanje forme (osvežavanje stranice)
+  function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
+    e.stopPropagation();
+    void submit();
+  }
+
+  async function submit() {
     setError("");
     if (!email.includes("@") || password.length < 6) {
       setError("Unesi ispravan email i lozinku od bar 6 karaktera.");
@@ -73,7 +79,7 @@ export function AuthForm({ mode }: { mode: "login" | "register" }) {
             : "Prijavi se i nastavi tamo gde si stao."}
         </p>
 
-        <form className="mt-6 space-y-4" onSubmit={submit}>
+        <form className="mt-6 space-y-4" noValidate onSubmit={onSubmit}>
           {isRegister && (
             <>
               <div className="space-y-2">
