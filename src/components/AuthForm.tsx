@@ -75,15 +75,32 @@ export function AuthForm({ mode }: { mode: "login" | "register" }) {
 
         <form className="mt-6 space-y-4" onSubmit={submit}>
           {isRegister && (
-            <div className="space-y-2">
-              <Label htmlFor="name">Ime</Label>
-              <Input
-                id="name"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                placeholder="Marko Marković"
-              />
-            </div>
+            <>
+              <div className="space-y-2">
+                <Label htmlFor="name">Ime i prezime *</Label>
+                <Input
+                  id="name"
+                  required
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  placeholder="Marko Marković"
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="username">Korisničko ime *</Label>
+                <Input
+                  id="username"
+                  required
+                  autoComplete="username"
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value)}
+                  placeholder="marko_m"
+                />
+                <p className="text-xs text-muted-foreground">
+                  Mora biti jedinstveno — ne može se ponavljati kod drugih vežbača.
+                </p>
+              </div>
+            </>
           )}
           <div className="space-y-2">
             <Label htmlFor="email">Email</Label>
