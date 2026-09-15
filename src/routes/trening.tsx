@@ -15,7 +15,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { useFitLog, type WorkoutSet } from "@/lib/fitlog-store";
+import { useFitLog, type NewWorkout as NewWorkoutData } from "@/lib/fitlog-store";
 
 export const Route = createFileRoute("/trening")({
   head: () => ({
@@ -50,6 +50,7 @@ function NewWorkout() {
   const [picked, setPicked] = useState("");
   const [customName, setCustomName] = useState("");
   const [customCat, setCustomCat] = useState("");
+  const [saving, setSaving] = useState(false);
 
   function addItem(exerciseId: string) {
     setItems((p) => [
@@ -71,8 +72,9 @@ function NewWorkout() {
     );
   }
 
-  function save() {
-    const sets: WorkoutSet[] = [];
+  // Čuva trening u bazi
+  async function save() {
+    const sets: NewWorkoutData["sets"] = [];
     for (const it of items) {
       let n = 0;
       for (const s of it.sets) {
@@ -81,8 +83,6 @@ function NewWorkout() {
         if (!Number.isFinite(w) || !Number.isFinite(r) || r <= 0) continue;
         n += 1;
         sets.push({
-          id: uid(),
-          workout_id: "",
           exercise_id: it.exercise_id,
           set_number: n,
           weight_kg: w,
@@ -94,12 +94,18 @@ function NewWorkout() {
       toast.error("Dodaj bar jednu seriju sa težinom i ponavljanjima.");
       return;
     }
-    addWorkout({
+    setSaving(true);
+    const error = await addWorkout({
       workout_name: name.trim() || "Trening",
       date: new Date().toISOString(),
       duration_minutes: parseInt(duration, 10) || 0,
       sets,
     });
+    setSaving(false);
+    if (error) {
+      toast.error(error);
+      return;
+    }
     toast.success("Trening sačuvan!");
     navigate({ to: "/istorija" });
   }
@@ -171,11 +177,16 @@ function NewWorkout() {
             className="rounded-full"
             onClick={() => {
               if (!customName.trim()) return;
-              const ex = addExercise(customName.trim(), customCat.trim() || "Ostalo");
-              addItem(ex.id);
-              setCustomName("");
-              setCustomCat("");
-              toast.success("Vežba kreirana i dodata.");
+              void addExercise(customName.trim(), customCat.trim() || "Ostalo").then((ex) => {
+                if (!ex) {
+                  toast.error("Vežba nije sačuvana.");
+                  return;
+                }
+                addItem(ex.id);
+                setCustomName("");
+                setCustomCat("");
+                toast.success("Vežba kreirana i dodata.");
+              });
             }}
           >
             Kreiraj
@@ -244,8 +255,12 @@ function NewWorkout() {
         );
       })}
 
-      <Button className="glow-neon w-full rounded-full py-6 text-base font-black" onClick={save}>
-        <Check className="h-5 w-5" /> Sačuvaj trening
+      <Button
+        className="glow-neon w-full rounded-full py-6 text-base font-black"
+        disabled={saving}
+        onClick={() => void save()}
+      >
+        <Check className="h-5 w-5" /> {saving ? "Čuvanje…" : "Sačuvaj trening"}
       </Button>
     </div>
   );

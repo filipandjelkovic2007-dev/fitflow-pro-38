@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
   CartesianGrid,
   Line,
@@ -46,6 +46,13 @@ function Profile() {
   const { user, workouts, exercises, updateProfile } = useFitLog();
   const [name, setName] = useState(user?.name ?? "");
   const [email, setEmail] = useState(user?.email ?? "");
+
+  // Kada se profil učita iz baze, popuni polja
+  useEffect(() => {
+    if (!user) return;
+    setName(user.name);
+    setEmail(user.email ?? "");
+  }, [user]);
 
   const usedExercises = useMemo(() => {
     const ids = new Set(workouts.flatMap((w) => w.sets.map((s) => s.exercise_id)));
@@ -191,8 +198,9 @@ function Profile() {
         <Button
           className="rounded-full font-bold"
           onClick={() => {
-            updateProfile(name, email);
-            toast.success("Profil sačuvan.");
+            void updateProfile(name, email).then((error) =>
+              error ? toast.error(error) : toast.success("Profil sačuvan."),
+            );
           }}
         >
           Sačuvaj izmene

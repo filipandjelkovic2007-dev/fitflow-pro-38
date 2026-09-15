@@ -1,5 +1,5 @@
 import { Link, useNavigate } from "@tanstack/react-router";
-import { Dumbbell, History, LayoutDashboard, LogOut, Plus, User } from "lucide-react";
+import { Dumbbell, History, LayoutDashboard, LogOut, Plus, User, Users } from "lucide-react";
 import { useEffect, type ReactNode } from "react";
 
 import { useFitLog } from "@/lib/fitlog-store";
@@ -9,6 +9,7 @@ const NAV = [
   { to: "/dashboard", label: "Tabla", icon: LayoutDashboard },
   { to: "/trening", label: "Trening", icon: Plus },
   { to: "/istorija", label: "Istorija", icon: History },
+  { to: "/vezbaci", label: "Vežbači", icon: Users },
   { to: "/profil", label: "Profil", icon: User },
 ] as const;
 
@@ -56,8 +57,7 @@ export function AppShell({ children }: { children: ReactNode }) {
               size="icon"
               aria-label="Odjava"
               onClick={() => {
-                logout();
-                navigate({ to: "/", replace: true });
+                void logout().then(() => navigate({ to: "/", replace: true }));
               }}
             >
               <LogOut className="h-4 w-4" />
@@ -69,7 +69,7 @@ export function AppShell({ children }: { children: ReactNode }) {
       <main className="mx-auto w-full max-w-5xl px-4 py-6">{children}</main>
 
       <nav className="fixed inset-x-0 bottom-0 z-30 border-t border-border/60 bg-background/95 backdrop-blur md:hidden">
-        <div className="grid grid-cols-4">
+        <div className="grid grid-cols-5">
           {NAV.map((n) => {
             const Icon = n.icon;
             return (
