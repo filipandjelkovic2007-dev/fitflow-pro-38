@@ -201,19 +201,29 @@ export function TrenLogProvider({ children }: { children: ReactNode }) {
   }, [loadAll]);
 
   // Registracija novog korisnika (profil kreira okidač u bazi)
-  const register = useCallback(async (email: string, password: string, name: string) => {
-    const { data, error } = await supabase.auth.signUp({
-      email,
-      password,
-      options: {
-        emailRedirectTo: window.location.origin,
-        data: { name },
-      },
-    });
-    if (error) return error.message;
-    if (!data.session) return "Proveri email i potvrdi nalog pre prijave.";
-    return null;
-  }, []);
+  const register = useCallback(
+    async (email: string, password: string, name: string, username: string) => {
+      // Provera da li je korisničko ime već zauzeto
+      const { data: free, error: checkError } = await supabase.rpc("username_available", {
+        _username: username,
+      });
+      if (checkError) return checkError.message;
+      if (!free) return "Korisničko ime je već zauzeto. Izaberi drugo.";
+
+      const { data, error } = await supabase.auth.signUp({
+        email,
+        password,
+        options: {
+          emailRedirectTo: window.location.origin,
+          data: { name, username },
+        },
+      });
+      if (error) return error.message;
+      if (!data.session) return "Proveri email i potvrdi nalog pre prijave.";
+      return null;
+    },
+    [],
+  );
 
   // Prijava postojećeg korisnika
   const login = useCallback(async (email: string, password: string) => {
