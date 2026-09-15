@@ -60,10 +60,15 @@ type Ctx = {
   exercises: Exercise[];
   workouts: Workout[];
   ready: boolean;
-  register: (email: string, password: string, name: string) => Promise<string | null>;
+  register: (
+    email: string,
+    password: string,
+    name: string,
+    username: string,
+  ) => Promise<string | null>;
   login: (email: string, password: string) => Promise<string | null>;
   logout: () => Promise<void>;
-  updateProfile: (name: string, email: string) => Promise<string | null>;
+  updateProfile: (name: string, email: string, username: string) => Promise<string | null>;
   addExercise: (name: string, category: string) => Promise<Exercise | null>;
   addWorkout: (w: NewWorkout) => Promise<string | null>;
   deleteWorkout: (id: string) => Promise<string | null>;
