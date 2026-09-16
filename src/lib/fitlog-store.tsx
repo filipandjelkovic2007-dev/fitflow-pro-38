@@ -10,6 +10,7 @@ import {
 } from "react";
 
 import { supabase } from "@/integrations/supabase/client";
+import { signInWithIdentifier } from "@/lib/auth.functions";
 
 // ——— Tipovi podataka (odgovaraju tabelama u bazi) ———
 
