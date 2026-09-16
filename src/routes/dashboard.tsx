@@ -2,7 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { CalendarDays, Dumbbell, Flame, Plus, TrendingUp } from "lucide-react";
 
 import { AppShell } from "@/components/AppShell";
-import { formatDate, useTrenLog, volumeOf } from "@/lib/fitlog-store";
+import { formatDate, useTrenLog, volumeOf } from "@/lib/trenlog-store";
 
 export const Route = createFileRoute("/dashboard")({
   head: () => ({

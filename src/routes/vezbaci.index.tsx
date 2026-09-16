@@ -3,7 +3,7 @@ import { ChevronRight, Users } from "lucide-react";
 import { useEffect, useState } from "react";
 
 import { AppShell } from "@/components/AppShell";
-import { fetchProfiles, formatDate, type Profile } from "@/lib/fitlog-store";
+import { fetchProfiles, formatDate, type Profile } from "@/lib/trenlog-store";
 
 export const Route = createFileRoute("/vezbaci/")({
   head: () => ({

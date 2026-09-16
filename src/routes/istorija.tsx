@@ -13,7 +13,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { formatDate, useTrenLog, volumeOf } from "@/lib/fitlog-store";
+import { formatDate, useTrenLog, volumeOf } from "@/lib/trenlog-store";
 
 export const Route = createFileRoute("/istorija")({
   head: () => ({

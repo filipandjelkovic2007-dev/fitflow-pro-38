@@ -22,7 +22,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { useTrenLog, volumeOf } from "@/lib/fitlog-store";
+import { useTrenLog, volumeOf } from "@/lib/trenlog-store";
 
 export const Route = createFileRoute("/profil")({
   head: () => ({
