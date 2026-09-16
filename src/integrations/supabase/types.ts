@@ -142,6 +142,7 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      email_for_username: { Args: { _username: string }; Returns: string }
       username_available: { Args: { _username: string }; Returns: boolean }
     }
     Enums: {
