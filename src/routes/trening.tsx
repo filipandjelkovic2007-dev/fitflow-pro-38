@@ -15,7 +15,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { useTrenLog, type NewWorkout as NewWorkoutData } from "@/lib/fitlog-store";
+import { useTrenLog, type NewWorkout as NewWorkoutData } from "@/lib/trenlog-store";
 
 export const Route = createFileRoute("/trening")({
   head: () => ({

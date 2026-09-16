@@ -2,7 +2,7 @@ import { Link, useNavigate } from "@tanstack/react-router";
 import { Dumbbell, History, LayoutDashboard, LogOut, Plus, User, Users } from "lucide-react";
 import { useEffect, type ReactNode } from "react";
 
-import { useTrenLog } from "@/lib/fitlog-store";
+import { useTrenLog } from "@/lib/trenlog-store";
 import { Button } from "@/components/ui/button";
 
 const NAV = [

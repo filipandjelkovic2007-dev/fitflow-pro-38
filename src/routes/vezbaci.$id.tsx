@@ -12,7 +12,7 @@ import {
   type Exercise,
   type Profile,
   type Workout,
-} from "@/lib/fitlog-store";
+} from "@/lib/trenlog-store";
 
 export const Route = createFileRoute("/vezbaci/$id")({
   head: () => ({
