@@ -225,9 +225,19 @@ export function TrenLogProvider({ children }: { children: ReactNode }) {
     [],
   );
 
-  // Prijava postojećeg korisnika
-  const login = useCallback(async (email: string, password: string) => {
-    const { error } = await supabase.auth.signInWithPassword({ email, password });
+  // Prijava postojećeg korisnika — email ILI korisničko ime
+  const login = useCallback(async (identifier: string, password: string) => {
+    if (identifier.includes("@")) {
+      const { error } = await supabase.auth.signInWithPassword({
+        email: identifier,
+        password,
+      });
+      return error ? error.message : null;
+    }
+    // Korisničko ime se razrešava na serveru, pa se sesija upisuje u pregledač
+    const result = await signInWithIdentifier({ data: { identifier, password } });
+    if (result.error || !result.session) return result.error ?? "Prijava nije uspela.";
+    const { error } = await supabase.auth.setSession(result.session);
     return error ? error.message : null;
   }, []);
 
