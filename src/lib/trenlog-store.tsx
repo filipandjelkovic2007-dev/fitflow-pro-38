@@ -146,7 +146,7 @@ export function TrenLogProvider({ children }: { children: ReactNode }) {
   // Učitava sve podatke prijavljenog korisnika iz baze
   const loadAll = useCallback(async (userId: string) => {
     const [profile, exs, wks] = await Promise.all([
-      fetchProfile(userId),
+      fetchOwnProfile(userId),
       fetchExercises(),
       fetchWorkoutsForUser(userId),
     ]);
