@@ -102,6 +102,20 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
+            foreignKeyName: "workout_sets_exercise_id_fkey"
+            columns: ["exercise_id"]
+            isOneToOne: false
+            referencedRelation: "public_exercises"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "workout_sets_workout_id_fkey"
+            columns: ["workout_id"]
+            isOneToOne: false
+            referencedRelation: "public_workouts"
+            referencedColumns: ["id"]
+          },
+          {
             foreignKeyName: "workout_sets_workout_id_fkey"
             columns: ["workout_id"]
             isOneToOne: false
@@ -139,7 +153,131 @@ export type Database = {
       }
     }
     Views: {
-      [_ in never]: never
+      public_exercises: {
+        Row: {
+          category: string | null
+          id: string | null
+          is_custom: boolean | null
+          name: string | null
+          user_id: string | null
+        }
+        Insert: {
+          category?: string | null
+          id?: string | null
+          is_custom?: boolean | null
+          name?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          category?: string | null
+          id?: string | null
+          is_custom?: boolean | null
+          name?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      public_profiles: {
+        Row: {
+          created_at: string | null
+          id: string | null
+          name: string | null
+          username: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string | null
+          name?: string | null
+          username?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          id?: string | null
+          name?: string | null
+          username?: string | null
+        }
+        Relationships: []
+      }
+      public_workout_sets: {
+        Row: {
+          exercise_id: string | null
+          id: string | null
+          reps: number | null
+          set_number: number | null
+          weight_kg: number | null
+          workout_id: string | null
+        }
+        Insert: {
+          exercise_id?: string | null
+          id?: string | null
+          reps?: number | null
+          set_number?: number | null
+          weight_kg?: number | null
+          workout_id?: string | null
+        }
+        Update: {
+          exercise_id?: string | null
+          id?: string | null
+          reps?: number | null
+          set_number?: number | null
+          weight_kg?: number | null
+          workout_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "workout_sets_exercise_id_fkey"
+            columns: ["exercise_id"]
+            isOneToOne: false
+            referencedRelation: "exercises"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "workout_sets_exercise_id_fkey"
+            columns: ["exercise_id"]
+            isOneToOne: false
+            referencedRelation: "public_exercises"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "workout_sets_workout_id_fkey"
+            columns: ["workout_id"]
+            isOneToOne: false
+            referencedRelation: "public_workouts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "workout_sets_workout_id_fkey"
+            columns: ["workout_id"]
+            isOneToOne: false
+            referencedRelation: "workouts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      public_workouts: {
+        Row: {
+          date: string | null
+          duration_minutes: number | null
+          id: string | null
+          user_id: string | null
+          workout_name: string | null
+        }
+        Insert: {
+          date?: string | null
+          duration_minutes?: number | null
+          id?: string | null
+          user_id?: string | null
+          workout_name?: string | null
+        }
+        Update: {
+          date?: string | null
+          duration_minutes?: number | null
+          id?: string | null
+          user_id?: string | null
+          workout_name?: string | null
+        }
+        Relationships: []
+      }
     }
     Functions: {
       username_available: { Args: { _username: string }; Returns: boolean }
