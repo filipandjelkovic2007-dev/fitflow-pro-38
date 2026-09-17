@@ -11,6 +11,12 @@ import {
 
 import { supabase } from "@/integrations/supabase/client";
 import { signInWithIdentifier } from "@/lib/auth.functions";
+import {
+  getPublicProfile,
+  listPublicExercises,
+  listPublicProfiles,
+  listPublicWorkouts,
+} from "@/lib/public-data.functions";
 
 // ——— Tipovi podataka (odgovaraju tabelama u bazi) ———
 
