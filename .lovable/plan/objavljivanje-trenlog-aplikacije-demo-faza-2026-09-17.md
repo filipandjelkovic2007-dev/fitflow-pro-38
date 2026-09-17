@@ -1,7 +1,7 @@
-# Objavljivanje TrenLog aplikacije (test faza)
+# Objavljivanje TrenLog aplikacije (demo faza)
 
 ## Kontekst
-Aplikacija je u test fazi — namenjena samo testiranju sa malim brojem korisnika, pa email potvrda pri registraciji ostaje isključena — registracija odmah prijavljuje korisnika. Bezbednosno skeniranje je prošlo bez nalaza, anonimni nalozi su isključeni, a lozinke se proveravaju protiv poznatih curenja.
+Aplikacija je u demo fazi — namenjena samo korišćenju uz mali broj demo korisnika, pa email potvrda pri registraciji ostaje isključena — registracija odmah prijavljuje korisnika. Bezbednosno skeniranje je prošlo bez nalaza, anonimni nalozi su isključeni, a lozinke se proveravaju protiv poznatih curenja.
 
 ## Koraci
 
@@ -19,4 +19,4 @@ Aplikacija je u test fazi — namenjena samo testiranju sa malim brojem korisnik
    - Podsetiti da se email potvrda može uključiti kasnije, jednim klikom, pre nego što aplikaciju dobiju pravi korisnici.
 
 ## Šta se NE menja
-- Ništa u kodu, bazi ili podešavanjima autentifikacije — email potvrda ostaje isključena za test fazu.
+- Ništa u kodu, bazi ili podešavanjima autentifikacije — email potvrda ostaje isključena za demo fazu.
