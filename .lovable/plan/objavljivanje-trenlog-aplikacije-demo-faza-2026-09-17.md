@@ -1,7 +1,7 @@
 # Objavljivanje TrenLog aplikacije (demo faza)
 
 ## Kontekst
-Aplikacija je u test fazi — namenjena samo korišćenju uz mali broj test korisnika, pa email potvrda pri registraciji ostaje isključena — registracija odmah prijavljuje korisnika. Bezbednosno skeniranje je prošlo bez nalaza, anonimni nalozi su isključeni, a lozinke se proveravaju protiv poznatih curenja.
+Aplikacija je u demo fazi — namenjena samo korišćenju uz mali broj demo korisnika, pa email potvrda pri registraciji ostaje isključena — registracija odmah prijavljuje korisnika. Bezbednosno skeniranje je prošlo bez nalaza, anonimni nalozi su isključeni, a lozinke se proveravaju protiv poznatih curenja.
 
 ## Koraci
 
