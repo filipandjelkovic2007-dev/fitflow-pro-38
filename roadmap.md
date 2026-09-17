@@ -1,3 +1,3 @@
 # Roadmap
 
-- [ ] Pokrenuti novo bezbednosno skeniranje (dublja provera) i prikazati rezultate
+- [x] Pokrenuto novo bezbednosno skeniranje — bez pronađenih problema
