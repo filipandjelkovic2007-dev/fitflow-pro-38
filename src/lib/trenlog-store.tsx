@@ -95,37 +95,27 @@ function mergeWorkouts(
   }));
 }
 
-// Učitava treninge (sa serijama) za zadatog korisnika — koristi se i za tuđi profil
+// Učitava treninge (sa serijama) za zadatog korisnika — koristi se i za tuđi profil.
+// Ide preko servera jer baza dozvoljava direktan pristup samo sopstvenim zapisima.
 export async function fetchWorkoutsForUser(userId: string): Promise<Workout[]> {
-  const { data: rows, error } = await supabase
-    .from("workouts")
-    .select("id, user_id, workout_name, date, duration_minutes")
-    .eq("user_id", userId)
-    .order("date", { ascending: false });
-  if (error || !rows || rows.length === 0) return [];
-
-  const { data: sets } = await supabase
-    .from("workout_sets")
-    .select("id, workout_id, exercise_id, set_number, weight_kg, reps")
-    .in(
-      "workout_id",
-      rows.map((r) => r.id),
-    );
-
-  return mergeWorkouts(rows, (sets ?? []) as WorkoutSet[]);
+  const { workouts, sets } = await listPublicWorkouts({ data: { userId } });
+  return mergeWorkouts(workouts, (sets ?? []) as WorkoutSet[]);
 }
 
-// Učitava spisak svih vežbača (profila)
+// Učitava spisak svih vežbača (bez email adresa — one su privatne)
 export async function fetchProfiles(): Promise<Profile[]> {
-  const { data } = await supabase
-    .from("profiles")
-    .select("id, name, email, username, created_at")
-    .order("created_at", { ascending: true });
-  return (data ?? []) as Profile[];
+  const rows = await listPublicProfiles();
+  return rows.map((p) => ({ ...p, email: null }));
 }
 
-// Učitava jedan profil po id-u
+// Učitava javni profil jednog vežbača (bez email adrese)
 export async function fetchProfile(id: string): Promise<Profile | null> {
+  const row = await getPublicProfile({ data: { id } });
+  return row ? { ...row, email: null } : null;
+}
+
+// Učitava sopstveni profil prijavljenog korisnika (uključuje i email)
+export async function fetchOwnProfile(id: string): Promise<Profile | null> {
   const { data } = await supabase
     .from("profiles")
     .select("id, name, email, username, created_at")
@@ -134,13 +124,9 @@ export async function fetchProfile(id: string): Promise<Profile | null> {
   return (data as Profile) ?? null;
 }
 
-// Učitava sve vežbe (predefinisane + sopstvene)
+// Učitava sve vežbe (predefinisane + sopstvene + one iz tuđih treninga)
 export async function fetchExercises(): Promise<Exercise[]> {
-  const { data } = await supabase
-    .from("exercises")
-    .select("id, user_id, name, category, is_custom")
-    .order("is_custom", { ascending: true })
-    .order("name", { ascending: true });
+  const data = await listPublicExercises();
   return (data ?? []) as Exercise[];
 }
 
