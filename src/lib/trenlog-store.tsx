@@ -52,6 +52,8 @@ export type Profile = {
   email: string | null;
   username: string;
   created_at: string;
+  // Da li su treninzi ovog vežbača vidljivi drugima (podrazumevano: nisu)
+  workouts_public: boolean;
 };
 
 // Novi trening koji se šalje u bazu (bez id-jeva koje generiše baza)
@@ -75,7 +77,11 @@ type Ctx = {
   ) => Promise<string | null>;
   login: (email: string, password: string) => Promise<string | null>;
   logout: () => Promise<void>;
-  updateProfile: (name: string, email: string, username: string) => Promise<string | null>;
+  updateProfile: (
+    name: string,
+    username: string,
+    workoutsPublic: boolean,
+  ) => Promise<string | null>;
   addExercise: (name: string, category: string) => Promise<Exercise | null>;
   addWorkout: (w: NewWorkout) => Promise<string | null>;
   deleteWorkout: (id: string) => Promise<string | null>;
@@ -108,26 +114,29 @@ export async function fetchWorkoutsForUser(userId: string): Promise<Workout[]> {
   return mergeWorkouts(workouts, (sets ?? []) as WorkoutSet[]);
 }
 
-// Učitava spisak svih vežbača (bez email adresa — one su privatne)
+// Učitava spisak vidljivih vežbača (bez email adresa — one su privatne)
 export async function fetchProfiles(): Promise<Profile[]> {
   const rows = await listPublicProfiles();
-  return rows.map((p) => ({ ...p, email: null }));
+  return rows.map((p) => ({ ...p, email: null, workouts_public: true }));
 }
 
-// Učitava javni profil jednog vežbača (bez email adrese)
+// Učitava profil jednog vežbača (bez email adrese)
 export async function fetchProfile(id: string): Promise<Profile | null> {
   const row = await getPublicProfile({ data: { id } });
-  return row ? { ...row, email: null } : null;
+  return row ? { ...row, email: null, workouts_public: true } : null;
 }
 
-// Učitava sopstveni profil prijavljenog korisnika (uključuje i email)
+// Učitava sopstveni profil prijavljenog korisnika.
+// Email se ne čita iz tabele (kolona je privatna u bazi) nego iz naloga za prijavu.
 export async function fetchOwnProfile(id: string): Promise<Profile | null> {
   const { data } = await supabase
     .from("profiles")
-    .select("id, name, email, username, created_at")
+    .select("id, name, username, created_at, workouts_public")
     .eq("id", id)
     .maybeSingle();
-  return (data as Profile) ?? null;
+  if (!data) return null;
+  const { data: auth } = await supabase.auth.getUser();
+  return { ...(data as Omit<Profile, "email">), email: auth.user?.email ?? null };
 }
 
 // Učitava sve vežbe (predefinisane + sopstvene + one iz tuđih treninga)
@@ -243,25 +252,33 @@ export function TrenLogProvider({ children }: { children: ReactNode }) {
     setExercises([]);
   }, []);
 
-  // Izmena podataka profila
-  const updateProfile = useCallback(async (name: string, email: string, username: string) => {
-    const id = userIdRef.current;
-    if (!id) return "Nisi prijavljen.";
-    const { data, error } = await supabase
-      .from("profiles")
-      .update({ name, email, username })
-      .eq("id", id)
-      .select("id, name, email, username, created_at")
-      .maybeSingle();
-    if (error) {
-      // 23505 = kršenje jedinstvenosti korisničkog imena
-      return error.code === "23505"
-        ? "Korisničko ime je već zauzeto. Izaberi drugo."
-        : error.message;
-    }
-    if (data) setUser(data as Profile);
-    return null;
-  }, []);
+  // Izmena podataka profila (email se ne menja ovde — vezan je za nalog za prijavu)
+  const updateProfile = useCallback(
+    async (name: string, username: string, workoutsPublic: boolean) => {
+      const id = userIdRef.current;
+      if (!id) return "Nisi prijavljen.";
+      const { data, error } = await supabase
+        .from("profiles")
+        .update({ name, username, workouts_public: workoutsPublic })
+        .eq("id", id)
+        .select("id, name, username, created_at, workouts_public")
+        .maybeSingle();
+      if (error) {
+        // 23505 = kršenje jedinstvenosti korisničkog imena
+        return error.code === "23505"
+          ? "Korisničko ime je već zauzeto. Izaberi drugo."
+          : error.message;
+      }
+      if (data) {
+        setUser((prev) => ({
+          ...(data as Omit<Profile, "email">),
+          email: prev?.email ?? null,
+        }));
+      }
+      return null;
+    },
+    [],
+  );
 
   // Dodavanje sopstvene vežbe
   const addExercise = useCallback(async (name: string, category: string) => {
