@@ -6,20 +6,24 @@ Polje `profiles.workouts_public` **ne postoji** u bazi — trenutne kolone su: `
 
 ## Šta se menja
 
-1. Novo polje `workouts_public` (da/ne, podrazumevano „da") u tabeli profila.
+1. Novo polje `workouts_public` (da/ne, **podrazumevano „ne" — svi su privatni**) u tabeli profila; svi postojeći nalozi se postavljaju na privatno.
 2. Pravila pristupa u bazi dobijaju uslov: svoje uvek, tuđe samo ako je vežbač javan.
 3. Stranica „Vežbači" i tuđi treninzi se učitavaju preko prijavljenog korisnika, bez povlašćenog ključa.
 4. Na stranici Profil dodaje se prekidač „Moji treninzi su javni".
 
 ## Email adrese
 
-`email` ostaje u tabeli, ali bi ga pravila pristupa inače otkrila drugim vežbačima. Minimalna zaštita bez brisanja kolone: uskratiti čitanje te jedne kolone kroz aplikaciju (podatak ostaje u bazi), a sopstvenu adresu prikazivati iz naloga za prijavu. Reci ako ovo ne želiš — onda bi tuđe adrese bile vidljive prijavljenim korisnicima.
+`email` ostaje u tabeli. Da tuđa adresa ne bi bila dostupna, čitanje te jedne kolone se uskraćuje kroz aplikaciju (podatak ostaje u bazi), a sopstvena adresa se prikazuje iz naloga za prijavu.
 
 ## SQL (za postojeću bazu, još nije izvršeno)
 
 ```sql
 ALTER TABLE public.profiles
   ADD COLUMN IF NOT EXISTS workouts_public boolean NOT NULL DEFAULT true;
+
+-- odmah: novi nalozi su privatni, i svi postojeći se postavljaju na privatno
+ALTER TABLE public.profiles ALTER COLUMN workouts_public SET DEFAULT false;
+UPDATE public.profiles SET workouts_public = false;
 
 -- pomoćna funkcija (bez rekurzije u pravilima)
 CREATE OR REPLACE FUNCTION public.is_profile_public(_user_id uuid)
@@ -52,7 +56,7 @@ CREATE POLICY "Vidljive predefinisane, sopstvene i javne vezbe" ON public.exerci
   FOR SELECT TO authenticated
   USING (is_custom = false OR auth.uid() = user_id OR public.is_profile_public(user_id));
 
--- zaštita email adresa (opciono, po tvojoj odluci)
+-- zaštita email adresa: tuđi email nije dostupan kroz aplikaciju
 REVOKE SELECT ON public.profiles FROM authenticated;
 GRANT SELECT (id, name, username, created_at, workouts_public) ON public.profiles TO authenticated;
 GRANT UPDATE (name, username, workouts_public) ON public.profiles TO authenticated;
