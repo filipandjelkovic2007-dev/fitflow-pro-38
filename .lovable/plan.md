@@ -18,12 +18,9 @@ Polje `profiles.workouts_public` **ne postoji** u bazi — trenutne kolone su: `
 ## SQL (za postojeću bazu, još nije izvršeno)
 
 ```sql
+-- novi i postojeći nalozi su privatni po defaultu
 ALTER TABLE public.profiles
-  ADD COLUMN IF NOT EXISTS workouts_public boolean NOT NULL DEFAULT true;
-
--- odmah: novi nalozi su privatni, i svi postojeći se postavljaju na privatno
-ALTER TABLE public.profiles ALTER COLUMN workouts_public SET DEFAULT false;
-UPDATE public.profiles SET workouts_public = false;
+  ADD COLUMN IF NOT EXISTS workouts_public boolean NOT NULL DEFAULT false;
 
 -- pomoćna funkcija (bez rekurzije u pravilima)
 CREATE OR REPLACE FUNCTION public.is_profile_public(_user_id uuid)
@@ -56,8 +53,15 @@ CREATE POLICY "Vidljive predefinisane, sopstvene i javne vezbe" ON public.exerci
   FOR SELECT TO authenticated
   USING (is_custom = false OR auth.uid() = user_id OR public.is_profile_public(user_id));
 
--- zaštita email adresa: tuđi email nije dostupan kroz aplikaciju
-REVOKE SELECT ON public.profiles FROM authenticated;
+-- izmena: korisnik menja isključivo svoj red u profiles
+DROP POLICY IF EXISTS "Korisnik menja svoj profil" ON public.profiles;
+CREATE POLICY "Korisnik menja svoj profil" ON public.profiles
+  FOR UPDATE TO authenticated
+  USING (auth.uid() = id)
+  WITH CHECK (auth.uid() = id);
+
+-- email je privatan na nivou baze: kolona se ne može čitati ni menjati iz aplikacije
+REVOKE SELECT, UPDATE ON public.profiles FROM authenticated;
 GRANT SELECT (id, name, username, created_at, workouts_public) ON public.profiles TO authenticated;
 GRANT UPDATE (name, username, workouts_public) ON public.profiles TO authenticated;
 ```
