@@ -53,8 +53,15 @@ CREATE POLICY "Vidljive predefinisane, sopstvene i javne vezbe" ON public.exerci
   FOR SELECT TO authenticated
   USING (is_custom = false OR auth.uid() = user_id OR public.is_profile_public(user_id));
 
--- zaštita email adresa: tuđi email nije dostupan kroz aplikaciju
-REVOKE SELECT ON public.profiles FROM authenticated;
+-- izmena: korisnik menja isključivo svoj red u profiles
+DROP POLICY IF EXISTS "Korisnik menja svoj profil" ON public.profiles;
+CREATE POLICY "Korisnik menja svoj profil" ON public.profiles
+  FOR UPDATE TO authenticated
+  USING (auth.uid() = id)
+  WITH CHECK (auth.uid() = id);
+
+-- email je privatan na nivou baze: kolona se ne može čitati ni menjati iz aplikacije
+REVOKE SELECT, UPDATE ON public.profiles FROM authenticated;
 GRANT SELECT (id, name, username, created_at, workouts_public) ON public.profiles TO authenticated;
 GRANT UPDATE (name, username, workouts_public) ON public.profiles TO authenticated;
 ```
