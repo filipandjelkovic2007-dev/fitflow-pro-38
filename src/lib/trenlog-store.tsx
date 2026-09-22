@@ -52,6 +52,8 @@ export type Profile = {
   email: string | null;
   username: string;
   created_at: string;
+  // Da li su treninzi ovog vežbača vidljivi drugima (podrazumevano: nisu)
+  workouts_public: boolean;
 };
 
 // Novi trening koji se šalje u bazu (bez id-jeva koje generiše baza)
@@ -75,7 +77,11 @@ type Ctx = {
   ) => Promise<string | null>;
   login: (email: string, password: string) => Promise<string | null>;
   logout: () => Promise<void>;
-  updateProfile: (name: string, email: string, username: string) => Promise<string | null>;
+  updateProfile: (
+    name: string,
+    username: string,
+    workoutsPublic: boolean,
+  ) => Promise<string | null>;
   addExercise: (name: string, category: string) => Promise<Exercise | null>;
   addWorkout: (w: NewWorkout) => Promise<string | null>;
   deleteWorkout: (id: string) => Promise<string | null>;
