@@ -252,25 +252,33 @@ export function TrenLogProvider({ children }: { children: ReactNode }) {
     setExercises([]);
   }, []);
 
-  // Izmena podataka profila
-  const updateProfile = useCallback(async (name: string, email: string, username: string) => {
-    const id = userIdRef.current;
-    if (!id) return "Nisi prijavljen.";
-    const { data, error } = await supabase
-      .from("profiles")
-      .update({ name, email, username })
-      .eq("id", id)
-      .select("id, name, email, username, created_at")
-      .maybeSingle();
-    if (error) {
-      // 23505 = kršenje jedinstvenosti korisničkog imena
-      return error.code === "23505"
-        ? "Korisničko ime je već zauzeto. Izaberi drugo."
-        : error.message;
-    }
-    if (data) setUser(data as Profile);
-    return null;
-  }, []);
+  // Izmena podataka profila (email se ne menja ovde — vezan je za nalog za prijavu)
+  const updateProfile = useCallback(
+    async (name: string, username: string, workoutsPublic: boolean) => {
+      const id = userIdRef.current;
+      if (!id) return "Nisi prijavljen.";
+      const { data, error } = await supabase
+        .from("profiles")
+        .update({ name, username, workouts_public: workoutsPublic })
+        .eq("id", id)
+        .select("id, name, username, created_at, workouts_public")
+        .maybeSingle();
+      if (error) {
+        // 23505 = kršenje jedinstvenosti korisničkog imena
+        return error.code === "23505"
+          ? "Korisničko ime je već zauzeto. Izaberi drugo."
+          : error.message;
+      }
+      if (data) {
+        setUser((prev) => ({
+          ...(data as Omit<Profile, "email">),
+          email: prev?.email ?? null,
+        }));
+      }
+      return null;
+    },
+    [],
+  );
 
   // Dodavanje sopstvene vežbe
   const addExercise = useCallback(async (name: string, category: string) => {
