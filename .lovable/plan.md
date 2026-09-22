@@ -18,12 +18,9 @@ Polje `profiles.workouts_public` **ne postoji** u bazi — trenutne kolone su: `
 ## SQL (za postojeću bazu, još nije izvršeno)
 
 ```sql
+-- novi i postojeći nalozi su privatni po defaultu
 ALTER TABLE public.profiles
-  ADD COLUMN IF NOT EXISTS workouts_public boolean NOT NULL DEFAULT true;
-
--- odmah: novi nalozi su privatni, i svi postojeći se postavljaju na privatno
-ALTER TABLE public.profiles ALTER COLUMN workouts_public SET DEFAULT false;
-UPDATE public.profiles SET workouts_public = false;
+  ADD COLUMN IF NOT EXISTS workouts_public boolean NOT NULL DEFAULT false;
 
 -- pomoćna funkcija (bez rekurzije u pravilima)
 CREATE OR REPLACE FUNCTION public.is_profile_public(_user_id uuid)
