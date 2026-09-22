@@ -22,6 +22,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Switch } from "@/components/ui/switch";
 import { useTrenLog, volumeOf } from "@/lib/trenlog-store";
 
 export const Route = createFileRoute("/profil")({
