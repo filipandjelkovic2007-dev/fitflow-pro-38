@@ -114,26 +114,29 @@ export async function fetchWorkoutsForUser(userId: string): Promise<Workout[]> {
   return mergeWorkouts(workouts, (sets ?? []) as WorkoutSet[]);
 }
 
-// Učitava spisak svih vežbača (bez email adresa — one su privatne)
+// Učitava spisak vidljivih vežbača (bez email adresa — one su privatne)
 export async function fetchProfiles(): Promise<Profile[]> {
   const rows = await listPublicProfiles();
-  return rows.map((p) => ({ ...p, email: null }));
+  return rows.map((p) => ({ ...p, email: null, workouts_public: true }));
 }
 
-// Učitava javni profil jednog vežbača (bez email adrese)
+// Učitava profil jednog vežbača (bez email adrese)
 export async function fetchProfile(id: string): Promise<Profile | null> {
   const row = await getPublicProfile({ data: { id } });
-  return row ? { ...row, email: null } : null;
+  return row ? { ...row, email: null, workouts_public: true } : null;
 }
 
-// Učitava sopstveni profil prijavljenog korisnika (uključuje i email)
+// Učitava sopstveni profil prijavljenog korisnika.
+// Email se ne čita iz tabele (kolona je privatna u bazi) nego iz naloga za prijavu.
 export async function fetchOwnProfile(id: string): Promise<Profile | null> {
   const { data } = await supabase
     .from("profiles")
-    .select("id, name, email, username, created_at")
+    .select("id, name, username, created_at, workouts_public")
     .eq("id", id)
     .maybeSingle();
-  return (data as Profile) ?? null;
+  if (!data) return null;
+  const { data: auth } = await supabase.auth.getUser();
+  return { ...(data as Omit<Profile, "email">), email: auth.user?.email ?? null };
 }
 
 // Učitava sve vežbe (predefinisane + sopstvene + one iz tuđih treninga)
