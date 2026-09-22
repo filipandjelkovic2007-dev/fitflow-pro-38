@@ -45,15 +45,15 @@ export const Route = createFileRoute("/profil")({
 function Profile() {
   const { user, workouts, exercises, updateProfile } = useTrenLog();
   const [name, setName] = useState(user?.name ?? "");
-  const [email, setEmail] = useState(user?.email ?? "");
   const [username, setUsername] = useState(user?.username ?? "");
+  const [isPublic, setIsPublic] = useState(user?.workouts_public ?? false);
 
   // Kada se profil učita iz baze, popuni polja
   useEffect(() => {
     if (!user) return;
     setName(user.name);
-    setEmail(user.email ?? "");
     setUsername(user.username ?? "");
+    setIsPublic(user.workouts_public);
   }, [user]);
 
   const usedExercises = useMemo(() => {
@@ -193,8 +193,8 @@ function Profile() {
             <Input id="pname" value={name} onChange={(e) => setName(e.target.value)} />
           </div>
           <div className="space-y-2">
-            <Label htmlFor="pemail">Email</Label>
-            <Input id="pemail" value={email} onChange={(e) => setEmail(e.target.value)} />
+            <Label htmlFor="pemail">Email (iz naloga za prijavu)</Label>
+            <Input id="pemail" value={user?.email ?? ""} readOnly disabled />
           </div>
           <div className="space-y-2">
             <Label htmlFor="pusername">Korisničko ime</Label>
@@ -205,10 +205,22 @@ function Profile() {
             />
           </div>
         </div>
+        {/* Prekidač privatnosti — podrazumevano su treninzi privatni */}
+        <div className="flex items-center justify-between gap-4 rounded-2xl border border-border p-4">
+          <div>
+            <Label htmlFor="ppublic" className="font-bold">
+              Moji treninzi su javni
+            </Label>
+            <p className="mt-1 text-sm text-muted-foreground">
+              Kada je uključeno, drugi vežbači mogu da vide tvoj profil i treninge.
+            </p>
+          </div>
+          <Switch id="ppublic" checked={isPublic} onCheckedChange={setIsPublic} />
+        </div>
         <Button
           className="rounded-full font-bold"
           onClick={() => {
-            void updateProfile(name.trim(), email.trim(), username.trim()).then((error) =>
+            void updateProfile(name.trim(), username.trim(), isPublic).then((error) =>
               error ? toast.error(error) : toast.success("Profil sačuvan."),
             );
           }}
