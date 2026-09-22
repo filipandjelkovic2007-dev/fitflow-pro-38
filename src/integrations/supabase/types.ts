@@ -48,6 +48,7 @@ export type Database = {
           id: string
           name: string
           username: string
+          workouts_public: boolean
         }
         Insert: {
           created_at?: string
@@ -55,6 +56,7 @@ export type Database = {
           id: string
           name?: string
           username: string
+          workouts_public?: boolean
         }
         Update: {
           created_at?: string
@@ -62,6 +64,7 @@ export type Database = {
           id?: string
           name?: string
           username?: string
+          workouts_public?: boolean
         }
         Relationships: []
       }
@@ -142,6 +145,7 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      is_profile_public: { Args: { _user_id: string }; Returns: boolean }
       username_available: { Args: { _username: string }; Returns: boolean }
     }
     Enums: {
