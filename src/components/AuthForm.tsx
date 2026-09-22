@@ -1,5 +1,5 @@
 import { Link, useNavigate } from "@tanstack/react-router";
-import { Dumbbell } from "lucide-react";
+import { Dumbbell, Globe, Lock } from "lucide-react";
 import { useEffect, useState } from "react";
 
 import { Button } from "@/components/ui/button";
@@ -16,7 +16,7 @@ type FieldErrors = {
 };
 
 export function AuthForm({ mode }: { mode: "login" | "register" }) {
-  const { login, register, user, ready } = useTrenLog();
+  const { login, register, updateProfile, user, ready } = useTrenLog();
   const navigate = useNavigate();
   const [name, setName] = useState("");
   const [username, setUsername] = useState("");
@@ -25,11 +25,16 @@ export function AuthForm({ mode }: { mode: "login" | "register" }) {
   const [errors, setErrors] = useState<FieldErrors>({});
   const [formError, setFormError] = useState("");
   const [loading, setLoading] = useState(false);
+  // Korak posle uspešne registracije: izbor privatnosti profila
+  const [step, setStep] = useState<"form" | "privacy">("form");
+  // Izabrana vidljivost (obavezan izbor pre nastavka)
+  const [visibility, setVisibility] = useState<"private" | "public" | null>(null);
 
-  // Ako je korisnik već prijavljen, vodi ga na kontrolnu tablu
+  // Ako je korisnik već prijavljen, vodi ga na kontrolnu tablu —
+  // osim dok je na koraku izbora privatnosti posle registracije
   useEffect(() => {
-    if (ready && user) navigate({ to: "/dashboard", replace: true });
-  }, [ready, user, navigate]);
+    if (ready && user && step === "form") navigate({ to: "/dashboard", replace: true });
+  }, [ready, user, navigate, step]);
 
   const isRegister = mode === "register";
 
