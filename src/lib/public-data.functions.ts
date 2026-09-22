@@ -3,10 +3,10 @@ import { z } from "zod";
 
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 
-// Javni pregled vežbača i njihovih treninga.
-// Baza je zaključana tako da svako direktno vidi samo svoje zapise, pa se
-// pregled tuđih podataka radi ovde — samo za prijavljene korisnike i samo sa
-// bezbednim poljima (email adrese se nikada ne vraćaju).
+// Pregled vežbača i njihovih treninga.
+// Koristi se klijent prijavljenog korisnika (context.supabase), pa pravila
+// pristupa u bazi stvarno važe: svoje uvek, tuđe samo kada je vežbač javan.
+// Email adrese se nikada ne čitaju.
 
 export type PublicProfileRow = {
   id: string;
@@ -17,9 +17,8 @@ export type PublicProfileRow = {
 
 export const listPublicProfiles = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
-  .handler(async () => {
-    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
-    const { data } = await supabaseAdmin
+  .handler(async ({ context }) => {
+    const { data } = await context.supabase
       .from("profiles")
       .select("id, name, username, created_at")
       .order("created_at", { ascending: true });
@@ -29,9 +28,8 @@ export const listPublicProfiles = createServerFn({ method: "GET" })
 export const getPublicProfile = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
   .inputValidator((data) => z.object({ id: z.string().uuid() }).parse(data))
-  .handler(async ({ data }) => {
-    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
-    const { data: row } = await supabaseAdmin
+  .handler(async ({ data, context }) => {
+    const { data: row } = await context.supabase
       .from("profiles")
       .select("id, name, username, created_at")
       .eq("id", data.id)
@@ -41,9 +39,8 @@ export const getPublicProfile = createServerFn({ method: "GET" })
 
 export const listPublicExercises = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
-  .handler(async () => {
-    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
-    const { data } = await supabaseAdmin
+  .handler(async ({ context }) => {
+    const { data } = await context.supabase
       .from("exercises")
       .select("id, user_id, name, category, is_custom")
       .order("is_custom", { ascending: true })
@@ -54,9 +51,8 @@ export const listPublicExercises = createServerFn({ method: "GET" })
 export const listPublicWorkouts = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
   .inputValidator((data) => z.object({ userId: z.string().uuid() }).parse(data))
-  .handler(async ({ data }) => {
-    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
-    const { data: rows } = await supabaseAdmin
+  .handler(async ({ data, context }) => {
+    const { data: rows } = await context.supabase
       .from("workouts")
       .select("id, user_id, workout_name, date, duration_minutes")
       .eq("user_id", data.userId)
@@ -64,7 +60,7 @@ export const listPublicWorkouts = createServerFn({ method: "GET" })
 
     if (!rows || rows.length === 0) return { workouts: [], sets: [] };
 
-    const { data: sets } = await supabaseAdmin
+    const { data: sets } = await context.supabase
       .from("workout_sets")
       .select("id, workout_id, exercise_id, set_number, weight_kg, reps")
       .in(
