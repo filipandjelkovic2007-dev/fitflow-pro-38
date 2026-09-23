@@ -85,12 +85,128 @@ export function AuthForm({ mode }: { mode: "login" | "register" }) {
       setFormError(message);
       return;
     }
+    // Posle registracije prvo ide korak izbora privatnosti profila,
+    // dok se prijava vodi direktno na kontrolnu tablu
+    if (isRegister) {
+      setStep("privacy");
+      return;
+    }
     navigate({ to: "/dashboard", replace: true });
   }
 
   // Jedinstven prikaz crvene poruke ispod polja
   const fieldError = (key: keyof FieldErrors) =>
     errors[key] ? <p className="text-sm text-destructive">{errors[key]}</p> : null;
+
+  // Čuva izabrani privatnostni izbor i prelazi u aplikaciju (bez ručnog osvežavanja)
+  async function continuePrivacy() {
+    if (!visibility || !user) return;
+    setLoading(true);
+    const message = await updateProfile(
+      user.name,
+      user.username,
+      visibility === "public",
+    );
+    setLoading(false);
+    if (message) {
+      setFormError(message);
+      return;
+    }
+    navigate({ to: "/dashboard", replace: true });
+  }
+
+  // Ekran izbora privatnosti — prikazuje se odmah nakon uspešne registracije
+  if (step === "privacy") {
+    // Čekamo da se profil učita iz baze pre nego što ponudimo izbor
+    if (!user) {
+      return (
+        <div className="flex min-h-screen items-center justify-center text-muted-foreground">
+          Učitavanje…
+        </div>
+      );
+    }
+
+    // Dve opcije vidljivosti profila (čuvaju se u profiles.workouts_public)
+    const privacyOptions = [
+      {
+        value: "private" as const,
+        label: "Privatan profil",
+        description: "Tvoj profil i treninzi nisu vidljivi drugim korisnicima.",
+      },
+      {
+        value: "public" as const,
+        label: "Javan profil",
+        description:
+          "Drugi prijavljeni TrenLog korisnici mogu da vide tvoj profil i treninge.",
+      },
+    ];
+
+    return (
+      <div className="flex min-h-screen flex-col items-center justify-center px-4 py-10">
+        <Link to="/" className="mb-8 flex items-center gap-2">
+          <span className="grid h-10 w-10 place-items-center rounded-xl bg-primary text-primary-foreground">
+            <Dumbbell className="h-5 w-5" />
+          </span>
+          <span className="text-xl font-extrabold tracking-tight">TrenLog</span>
+        </Link>
+
+        <div className="surface-card w-full max-w-sm p-6">
+          <h1 className="text-2xl font-bold tracking-tight">
+            Kako želiš da tvoj profil bude vidljiv?
+          </h1>
+          <p className="mt-1 text-sm text-muted-foreground">
+            Izbor možeš kasnije promeniti na stranici Profil.
+          </p>
+
+          <div className="mt-6 space-y-3">
+            {privacyOptions.map((o) => {
+              const selected = visibility === o.value;
+              const Icon = o.value === "private" ? Lock : Globe;
+              return (
+                <button
+                  key={o.value}
+                  type="button"
+                  onClick={() => setVisibility(o.value)}
+                  aria-pressed={selected}
+                  className={`flex w-full items-start gap-3 rounded-2xl border p-4 text-left transition-colors ${
+                    selected
+                      ? "border-primary bg-primary/10"
+                      : "border-border/60 hover:border-border"
+                  }`}
+                >
+                  <span
+                    className={`mt-0.5 grid h-8 w-8 shrink-0 place-items-center rounded-full ${
+                      selected
+                        ? "bg-primary text-primary-foreground"
+                        : "bg-secondary text-muted-foreground"
+                    }`}
+                  >
+                    <Icon className="h-4 w-4" />
+                  </span>
+                  <span className="min-w-0">
+                    <span className="block text-sm font-bold">{o.label}</span>
+                    <span className="mt-0.5 block text-xs text-muted-foreground">
+                      {o.description}
+                    </span>
+                  </span>
+                </button>
+              );
+            })}
+          </div>
+
+          {formError && <p className="mt-4 text-sm text-destructive">{formError}</p>}
+
+          <Button
+            className="mt-6 w-full rounded-full font-bold"
+            disabled={!visibility || loading}
+            onClick={() => void continuePrivacy()}
+          >
+            {loading ? "Sačekaj…" : "Nastavi"}
+          </Button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="flex min-h-screen flex-col items-center justify-center px-4 py-10">
