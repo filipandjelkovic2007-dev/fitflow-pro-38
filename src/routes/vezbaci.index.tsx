@@ -3,6 +3,7 @@ import { ChevronRight, Users } from "lucide-react";
 import { useEffect, useState } from "react";
 
 import { AppShell } from "@/components/AppShell";
+import { useTrenLog } from "@/lib/trenlog-store";
 import { fetchProfiles, formatDate, type Profile } from "@/lib/trenlog-store";
 
 export const Route = createFileRoute("/vezbaci/")({
@@ -27,12 +28,17 @@ export const Route = createFileRoute("/vezbaci/")({
 });
 
 function UsersPage() {
+  const { user } = useTrenLog();
   const [profiles, setProfiles] = useState<Profile[] | null>(null);
 
   // Učitava spisak vežbača iz baze
   useEffect(() => {
     void fetchProfiles().then(setProfiles);
   }, []);
+
+  // Lista „Vežbači“ prikazuje isključivo druge korisnike — sopstveni profil
+  // se nalazi na stranici „Profil“
+  const others = profiles?.filter((p) => p.id !== user?.id) ?? null;
 
   return (
     <div className="space-y-5">
@@ -43,16 +49,16 @@ function UsersPage() {
         </p>
       </div>
 
-      {profiles === null && <p className="text-sm text-muted-foreground">Učitavanje…</p>}
+      {others === null && <p className="text-sm text-muted-foreground">Učitavanje…</p>}
 
-      {profiles?.length === 0 && (
+      {others?.length === 0 && (
         <div className="surface-card p-8 text-center text-sm text-muted-foreground">
-          Još nema registrovanih vežbača.
+          Još nema drugih registrovanih vežbača.
         </div>
       )}
 
       <div className="space-y-3">
-        {profiles?.map((p) => (
+        {others?.map((p) => (
           <Link
             key={p.id}
             to="/vezbaci/$id"
