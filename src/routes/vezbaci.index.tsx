@@ -49,16 +49,16 @@ function UsersPage() {
         </p>
       </div>
 
-      {profiles === null && <p className="text-sm text-muted-foreground">Učitavanje…</p>}
+      {others === null && <p className="text-sm text-muted-foreground">Učitavanje…</p>}
 
-      {profiles?.length === 0 && (
+      {others?.length === 0 && (
         <div className="surface-card p-8 text-center text-sm text-muted-foreground">
-          Još nema registrovanih vežbača.
+          Još nema drugih registrovanih vežbača.
         </div>
       )}
 
       <div className="space-y-3">
-        {profiles?.map((p) => (
+        {others?.map((p) => (
           <Link
             key={p.id}
             to="/vezbaci/$id"
