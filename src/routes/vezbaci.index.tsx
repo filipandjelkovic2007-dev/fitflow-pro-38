@@ -3,6 +3,7 @@ import { ChevronRight, Users } from "lucide-react";
 import { useEffect, useState } from "react";
 
 import { AppShell } from "@/components/AppShell";
+import { useTrenLog } from "@/lib/trenlog-store";
 import { fetchProfiles, formatDate, type Profile } from "@/lib/trenlog-store";
 
 export const Route = createFileRoute("/vezbaci/")({
@@ -27,12 +28,17 @@ export const Route = createFileRoute("/vezbaci/")({
 });
 
 function UsersPage() {
+  const { user } = useTrenLog();
   const [profiles, setProfiles] = useState<Profile[] | null>(null);
 
   // Učitava spisak vežbača iz baze
   useEffect(() => {
     void fetchProfiles().then(setProfiles);
   }, []);
+
+  // Lista „Vežbači“ prikazuje isključivo druge korisnike — sopstveni profil
+  // se nalazi na stranici „Profil“
+  const others = profiles?.filter((p) => p.id !== user?.id) ?? null;
 
   return (
     <div className="space-y-5">
