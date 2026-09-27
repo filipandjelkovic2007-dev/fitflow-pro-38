@@ -121,6 +121,7 @@ function RootShell({ children }: { children: ReactNode }) {
   );
 }
 
+// Glavni okvir aplikacije (provajderi podataka i obaveštenja)
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
 
