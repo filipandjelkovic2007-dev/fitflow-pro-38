@@ -13,6 +13,28 @@ import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 import { TrenLogProvider } from "../lib/trenlog-store";
 import { Toaster } from "../components/ui/sonner";
+import { Button } from "../components/ui/button";
+
+const hasBrowserDatabaseConfig = Boolean(
+  import.meta.env["VITE_SUPABASE_URL"] && import.meta.env["VITE_SUPABASE_PUBLISHABLE_KEY"],
+);
+
+function ConnectionUnavailable() {
+  return (
+    <main className="flex min-h-screen items-center justify-center bg-background px-4">
+      <div className="max-w-md text-center">
+        <p className="text-sm font-semibold uppercase text-primary">TrenLog</p>
+        <h1 className="mt-3 text-2xl font-bold text-foreground">Veza trenutno nije dostupna</h1>
+        <p className="mt-3 text-sm text-muted-foreground">
+          Osveži stranicu da učitaš najnoviju verziju aplikacije.
+        </p>
+        <Button className="mt-6" onClick={() => window.location.reload()}>
+          Osveži stranicu
+        </Button>
+      </div>
+    </main>
+  );
+}
 
 function NotFoundComponent() {
   return (
@@ -124,6 +146,10 @@ function RootShell({ children }: { children: ReactNode }) {
 // Glavni okvir aplikacije (provajderi podataka i obaveštenja)
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
+
+  if (typeof window !== "undefined" && !hasBrowserDatabaseConfig) {
+    return <ConnectionUnavailable />;
+  }
 
   return (
     <QueryClientProvider client={queryClient}>
