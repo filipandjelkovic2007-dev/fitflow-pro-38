@@ -1,22 +1,38 @@
 # Objavljivanje TrenLog aplikacije (demo faza)
 
 ## Kontekst
-Aplikacija je u demo fazi — namenjena samo korišćenju uz mali broj demo korisnika, pa email potvrda pri registraciji ostaje isključena — registracija odmah prijavljuje korisnika. Bezbednosno skeniranje je prošlo bez nalaza, anonimni nalozi su isključeni, a lozinke se proveravaju protiv poznatih curenja.
+
+Aplikacija je namenjena demo fazi. Pre objavljivanja potrebno je proveriti aktuelna Supabase Auth podešavanja i potvrditi da odgovaraju ovoj fazi. Ovaj dokument predstavlja plan objavljivanja i ne predstavlja dokaz trenutnog stanja podešavanja.
 
 ## Koraci
 
-1. **Provera stanja pre objavljivanja**
-   - Pročitati rezultate poslednjeg bezbednosnog skeniranja (prošlo je bez nalaza — samo potvrditi da nema novih kritičnih nalaza).
-   - Proveriti da li build prolazi bez grešaka.
+### 1. Provera stanja pre objavljivanja
 
-2. **Objavljivanje**
-   - Zatražiti objavljivanje aplikacije (deploy) — dostupna će biti javna TrenLog adresa.
-   - deployment obično traje oko minut.
+* Pregledati rezultat poslednjeg bezbednosnog skeniranja i proveriti da nema novih kritičnih nalaza.
+* U Supabase Dashboard-u proveriti da je **Allow anonymous sign-ins** isključen.
+* Proveriti podešavanja zaštite od kompromitovanih lozinki.
+* Proveriti politiku potvrde email adrese i potvrditi da odgovara planiranoj demo fazi.
+* Proveriti da aplikacija prolazi build bez grešaka.
+* Proveriti da frontend ne sadrži niti izlaže tajne serverske vrednosti, uključujući Supabase `service_role` ključ.
 
-3. **Obaveštenje nakon objavljivanja**
-   - Preneti javni link aplikacije.
-   - Podsetiti da se Lovable adresa može preimenovati i da se pravi domen (npr. trenlog.rs) može povezati u podešavanjima projekta kad dođe pravo lansiranje.
-   - Podsetiti da se email potvrda može uključiti kasnije, jednim klikom, pre nego što aplikaciju dobiju pravi korisnici.
+### 2. Objavljivanje
 
-## Šta se NE menja
-- Ništa u kodu, bazi ili podešavanjima autentifikacije — email potvrda ostaje isključena za demo fazu.
+* Pokrenuti deploy aplikacije kroz predviđeni hosting/deployment mehanizam.
+* Nakon uspešnog deploy-a proveriti da je javna TrenLog adresa dostupna.
+* Osnovno proveriti registraciju, prijavu i ključne funkcije aplikacije na objavljenoj verziji.
+
+### 3. Obaveštenje nakon objavljivanja
+
+* Preneti javni link aplikacije.
+* Napomenuti da se deployment adresa može naknadno prilagoditi u skladu sa mogućnostima izabranog hosting rešenja.
+* Za pravo lansiranje može se povezati sopstveni domen, ukoliko bude potreban.
+* Pre korišćenja aplikacije od strane stvarnih korisnika ponovo proveriti i, po potrebi, promeniti politiku potvrde email adrese i ostala Auth podešavanja.
+
+## Šta se NE menja bez posebne provere
+
+* Ne menjati kod, bazu ili podešavanja autentifikacije samo radi objavljivanja.
+* Ne menjati postojeća pravila privatnosti ili RLS politike kao deo samog deploy-a.
+* Ne unositi tajne ključeve ili serverske privilegije u frontend konfiguraciju.
+
+Sve promene van samog deployment postupka treba prethodno proveriti i eksplicitno odobriti.
+

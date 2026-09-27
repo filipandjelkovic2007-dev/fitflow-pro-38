@@ -102,11 +102,7 @@ export function AuthForm({ mode }: { mode: "login" | "register" }) {
   async function continuePrivacy() {
     if (!visibility || !user) return;
     setLoading(true);
-    const message = await updateProfile(
-      user.name,
-      user.username,
-      visibility === "public",
-    );
+    const message = await updateProfile(user.name, user.username, visibility === "public");
     setLoading(false);
     if (message) {
       setFormError(message);
@@ -136,8 +132,7 @@ export function AuthForm({ mode }: { mode: "login" | "register" }) {
       {
         value: "public" as const,
         label: "Javan profil",
-        description:
-          "Drugi prijavljeni TrenLog korisnici mogu da vide tvoj profil i treninge.",
+        description: "Drugi prijavljeni TrenLog korisnici mogu da vide tvoj profil i treninge.",
       },
     ];
 

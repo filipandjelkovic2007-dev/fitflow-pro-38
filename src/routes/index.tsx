@@ -73,8 +73,8 @@ function Landing() {
           Zabeleži je.
         </h1>
         <p className="mt-5 max-w-xl text-base text-muted-foreground sm:text-lg">
-          TrenLog pamti tvoje težine, ponavljanja i volumen treninga, pa ti tačno pokazuje
-          koliko si jači nego prošlog meseca.
+          TrenLog pamti tvoje težine, ponavljanja i volumen treninga, pa ti tačno pokazuje koliko si
+          jači nego prošlog meseca.
         </p>
         <div className="mt-8 flex flex-col gap-3 sm:flex-row">
           <Link

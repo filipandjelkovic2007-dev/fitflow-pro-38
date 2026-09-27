@@ -6,10 +6,8 @@ import { z } from "zod";
 // Pretraga naloga se radi na serveru i tek uz ispravnu lozinku vraća sesiju,
 // tako da se email adrese drugih korisnika nikada ne izlažu javno.
 export const signInWithIdentifier = createServerFn({ method: "POST" })
-  .inputValidator((data) =>
-    z
-      .object({ identifier: z.string().min(1), password: z.string().min(1) })
-      .parse(data),
+  .validator((data) =>
+    z.object({ identifier: z.string().min(1), password: z.string().min(1) }).parse(data),
   )
   .handler(async ({ data }) => {
     const identifier = data.identifier.trim();
@@ -22,7 +20,8 @@ export const signInWithIdentifier = createServerFn({ method: "POST" })
         .select("id")
         .ilike("username", identifier)
         .maybeSingle();
-      if (!profile) return { error: "Pogrešno korisničko ime ili lozinka." as string, session: null };
+      if (!profile)
+        return { error: "Pogrešno korisničko ime ili lozinka." as string, session: null };
       const { data: found } = await supabaseAdmin.auth.admin.getUserById(profile.id);
       if (!found?.user?.email) {
         return { error: "Pogrešno korisničko ime ili lozinka." as string, session: null };

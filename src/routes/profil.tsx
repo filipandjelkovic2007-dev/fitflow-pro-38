@@ -199,11 +199,7 @@ function Profile() {
           </div>
           <div className="space-y-2">
             <Label htmlFor="pusername">Korisničko ime</Label>
-            <Input
-              id="pusername"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-            />
+            <Input id="pusername" value={username} onChange={(e) => setUsername(e.target.value)} />
           </div>
         </div>
         {/* Prekidač privatnosti — podrazumevano su treninzi privatni */}

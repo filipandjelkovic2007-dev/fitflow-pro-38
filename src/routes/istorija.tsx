@@ -39,10 +39,7 @@ function HistoryPage() {
   const [type, setType] = useState("all");
   const [open, setOpen] = useState<string | null>(null);
 
-  const types = useMemo(
-    () => Array.from(new Set(workouts.map((w) => w.workout_name))),
-    [workouts],
-  );
+  const types = useMemo(() => Array.from(new Set(workouts.map((w) => w.workout_name))), [workouts]);
 
   const list = useMemo(
     () =>

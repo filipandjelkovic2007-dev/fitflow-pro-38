@@ -322,10 +322,7 @@ export function TrenLogProvider({ children }: { children: ReactNode }) {
       return setsError.message;
     }
 
-    setWorkouts((prev) => [
-      { ...created, sets: (savedSets ?? []) as WorkoutSet[] },
-      ...prev,
-    ]);
+    setWorkouts((prev) => [{ ...created, sets: (savedSets ?? []) as WorkoutSet[] }, ...prev]);
     return null;
   }, []);
 

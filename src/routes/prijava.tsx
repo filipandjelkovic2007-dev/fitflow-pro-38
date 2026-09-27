@@ -8,7 +8,10 @@ export const Route = createFileRoute("/prijava")({
       { title: "Prijava — TrenLog" },
       { name: "description", content: "Prijavi se na TrenLog i nastavi evidenciju treninga." },
       { property: "og:title", content: "Prijava — TrenLog" },
-      { property: "og:description", content: "Prijavi se na TrenLog i nastavi evidenciju treninga." },
+      {
+        property: "og:description",
+        content: "Prijavi se na TrenLog i nastavi evidenciju treninga.",
+      },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
     ],

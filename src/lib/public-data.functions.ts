@@ -27,7 +27,7 @@ export const listPublicProfiles = createServerFn({ method: "GET" })
 
 export const getPublicProfile = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((data) => z.object({ id: z.string().uuid() }).parse(data))
+  .validator((data) => z.object({ id: z.string().uuid() }).parse(data))
   .handler(async ({ data, context }) => {
     const { data: row } = await context.supabase
       .from("profiles")
@@ -50,7 +50,7 @@ export const listPublicExercises = createServerFn({ method: "GET" })
 
 export const listPublicWorkouts = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((data) => z.object({ userId: z.string().uuid() }).parse(data))
+  .validator((data) => z.object({ userId: z.string().uuid() }).parse(data))
   .handler(async ({ data, context }) => {
     const { data: rows } = await context.supabase
       .from("workouts")
