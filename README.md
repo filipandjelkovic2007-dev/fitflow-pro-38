@@ -4,7 +4,7 @@ Kreiraj kompletnu web aplikaciju za evidenciju treninga prema sledećim detaljni
 
 1. Naziv aplikacije
 
-Aplikacija se zove "FitLog".
+Aplikacija se zove "TrenLog".
 
 2. Cilj aplikacije
 
