@@ -84,3 +84,17 @@ cd <repository-name>
 npm i
 npm run dev
 ```
+
+## Pokretanje iz GitHub repo-a
+
+```bash
+bun install
+cp .env.example .env
+bun run dev
+```
+
+`.env` nije u repo-u (zaštićena je u `.gitignore`), zato se posle `clone`-a kopira
+`.env.example`. Vrednosti u `.env.example` su javne (adresa backend-a i javni ključ) i
+bezbedne su za klijent. Tajni serverski ključ se ne nalazi u repo-u i nije dostupan na
+Lovable Cloud — delovi aplikacije koji ga koriste rade u Lovable preview-u i na
+objavljenoj adresi, a ne i u običnom lokalnom clone-u.
