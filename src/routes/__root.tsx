@@ -147,7 +147,7 @@ function RootShell({ children }: { children: ReactNode }) {
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
 
-  if (typeof window !== "undefined" && !hasBrowserDatabaseConfig) {
+  if (!hasBrowserDatabaseConfig) {
     return <ConnectionUnavailable />;
   }
 
