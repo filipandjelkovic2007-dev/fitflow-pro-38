@@ -6,6 +6,12 @@
 // You can pass additional config via defineConfig({ vite: { ... }, etc... }) if needed.
 import { defineConfig } from "@lovable.dev/vite-tanstack-config";
 
+// Rezervne JAVNE vrednosti postojećeg Cloud backend-a (URL i publishable ključ su bezbedni za klijent).
+// Koriste se samo ako build okruženje za objavu ne prosledi VITE_* promenljive.
+process.env.VITE_SUPABASE_URL ||= "https://zcoddmpabmvthcugfljs.supabase.co";
+process.env.VITE_SUPABASE_PUBLISHABLE_KEY ||= "sb_publishable_G2xHddiLp1xSmzP_g88tCA_pH2jeA4d";
+process.env.VITE_SUPABASE_PROJECT_ID ||= "zcoddmpabmvthcugfljs";
+
 export default defineConfig({
   tanstackStart: {
     // Redirect TanStack Start's bundled server entry to src/server.ts (our SSR error wrapper).
