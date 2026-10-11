@@ -1,86 +1,73 @@
-# TrenLog Progress
+# TrenLog
 
-Kreiraj kompletnu web aplikaciju za evidenciju treninga prema sledećim detaljnim specifikacijama:
+Aplikacija za evidenciju treninga u teretani: beležiš serije, težine i ponavljanja,
+a TrenLog ti pokazuje koliko si jači nego prošlog meseca.
 
-1. Naziv aplikacije
+**Status:** demo faza (testiranje korisnika). Javna adresa: https://fitflow-pro-38.lovable.app
 
-Aplikacija se zove "TrenLog".
+## Funkcionalnosti
 
-2. Cilj aplikacije
+- **Nalog** — registracija (ime i prezime, korisničko ime, email, lozinka), prijava
+  email-adresom **ili** korisničkim imenom, odjava.
+- **Jedinstveno korisničko ime** — ne može se ponoviti kod drugog vežbača.
+- **Privatnost** — izbor odmah posle registracije i prekidač „Moji treninzi su javni"
+  u profilu.
+- **Kontrolna tabla** — treninzi ove nedelje, ukupan volumen, poslednji trening i
+  dugme „Započni novi trening".
+- **Unos treninga** — predefinisane vežbe ili sopstvena vežba, težina i ponavljanja
+  za svaku seriju.
+- **Tajmer pauze** — odbrojavanje odmora između serija.
+- **Istorija** — hronološki prikaz, filter po datumu i po tipu treninga, pregled i
+  brisanje treninga.
+- **Vežbači** — spisak drugih vežbača sa javnim profilom i pregled njihovih treninga.
+- **Profil i statistika** — napredak po vežbi i volumen po treningu (grafikoni).
 
-Glavni cilj aplikacije je da omogući korisnicima lako, brzo i pregledno praćenje sportskih treninga, istorije podignutih težina i napretka kroz vreme, kako bi ostali motivisani i imali jasan uvid u svoj fitnes razvoj.
+## Stranice
 
-3. Tipovi korisnika
+| Adresa | Sadržaj |
+| --- | --- |
+| `/` | Početna stranica (za neprijavljene) |
+| `/prijava`, `/registracija` | Prijava i registracija |
+| `/dashboard` | Kontrolna tabla |
+| `/trening` | Unos novog treninga |
+| `/istorija` | Istorija treninga |
+| `/vezbaci`, `/vezbaci/$id` | Vežbači i pregled pojedinačnog vežbača |
+| `/profil` | Profil i statistika |
 
-Neregistrovani korisnik: Može da vidi samo početnu (Landing) stranicu sa marketinškim tekstom i opcijama za prijavu/registraciju.
+## Tehnologije
 
-Registrovani korisnik (Vežbač): Ima pristup svim funkcionalnostima za unos, izmenu i pregled sopstvenih treninga i statistike.
+React 19 i TanStack Start (Vite), Tailwind CSS v4, komponente iz shadcn/ui,
+Recharts za grafikone, Lovable Cloud za bazu i autentifikaciju.
 
-4. Glavne stranice (Layout & Pages)
+## Podaci
 
-Landing stranica (Početna): Čist dizajn sa "Hero" sekcijom, kratkim opisom prednosti aplikacije i uočljivim dugmadima "Registruj se" i "Prijavi se".
+| Tabela | Polja |
+| --- | --- |
+| `profiles` | id, name, email, username, created_at, workouts_public |
+| `exercises` | id, name, category, is_custom, user_id |
+| `workouts` | id, user_id, workout_name, date, duration_minutes |
+| `workout_sets` | id, workout_id, exercise_id, set_number, weight_kg, reps |
 
-Dashboard (Kontrolna tabla): Centralno mesto nakon prijave. Prikazuje brzu statistiku (broj treninga ove nedelje, ukupan volumen, poslednji trening) i dugme "Započni novi trening".
+Predefinisane vežbe (`is_custom = false`) vide svi; sopstvene vežbe prate ista
+pravila vidljivosti kao i treninzi.
 
-Stranica za unos treninga: Dinamička forma gde korisnik bira vežbe, unosi broj serija, ponavljanja i težinu za svaku seriju.
+## Privatnost
 
-Istorija treninga: Hronološki prikaz svih završenih treninga sa mogućnošću filtriranja po datumu ili tipu treninga.
+- Svako vidi i menja **samo svoje podatke** — pravila pristupa su u bazi, ne u interfejsu.
+- `workouts_public` (podrazumevano `false`) odlučuje da li te drugi prijavljeni
+  korisnici vide: profil, treninzi, serije i sopstvene vežbe prate tu odluku.
+- Email adresa je zaključana u bazi — svoju vidiš u profilu, tuđu nijedan korisnik
+  ne može da pročita.
+- Spisak vežbača radi preko zaštićenih server funkcija koje vraćaju samo bezbedna polja.
 
-Profil i Statistika: Grafikoni napretka (npr. grafik linije za rast snage na ključnim vežbama) i osnovna podešavanja profila korisnika.
+## Kako se radi
 
-5. Glavne funkcionalnosti
+Projekat je povezan sa GitHub-om: promene u Lovable editoru automatski se guraju u
+repo, a promene gurnute u repo stižu nazad u Lovable. Razvoj ide kroz Lovable
+editor — lokalno pokretanje nije potrebno.
 
-Autentifikacija: Registracija i prijava korisnika (putem email-a i lozinke).
+## Pre pravog lansiranja
 
-Kreiranje treninga: Korisnik može da izabere predefinisane vežbe (ili doda svoju), unese težinu (kg) i broj ponavljanja za svaku seriju (Set). Moguće je dodati više vežbi u jedan trening.
-
-Tajmer za pauzu: Integrisani štoperica/tajmer unutar stranice za trening koji odbrojava vreme odmora između serija (npr. 60 ili 90 sekundi).
-
-Istorija i brisanje: Pregled detalja svakog starog treninga uz mogućnost brisanja pogrešno unetog treninga.
-
-Interaktivni grafikoni: Prikaz napretka za odabranu vežbu kroz vreme pomoću grafikona.
-
-6. Struktura podataka (Baza podataka)
-
-U bazi je potrebno čuvati sledeće entitete i polja:
-
-Users (Korisnici): id, name, email, password_hash, created_at.
-
-Exercises (Vežbe): id, name (npr. Čučanj, Benč pres), category (npr. Grudi, Noge), is_custom (da li je korisnik sam kreirao).
-
-Workouts (Trening sesije): id, user_id, workout_name (npr. "Trening A - Noge"), date, duration_minutes.
-
-Workout_Sets (Serije unutar treninga): id, workout_id, exercise_id, set_number (1, 2, 3...), weight_kg, reps.
-
-7. Izgled i stil korisničkog interfejsa (UI/UX)
-
-Tema: Moderan, čist i sportski "Dark Mode" (tamna tema) kao primarni izgled.
-
-Paleta boja: Pozadina u tamno sivoj/crnoj boji (#121212), tekst u beloj i svetlo sivoj. Akcentna boja koja se koristi za dugmad, tajmer i važne elemente treba da bude neonsko zelena (#CCFF00) ili svetlo plava (#00E5FF) kako bi asocirala na energiju i fitnes.
-
-Komponente: Zaobljene ivice na karticama (Cards), jasan kontrast, moderni i čitljivi bezserifni fontovi (npr. Inter ili Roboto).
-
-Prilagodljivost: Interfejs mora biti potpuno "Mobile-first" (responzivan), jer će korisnici aplikaciju primarno koristiti na mobilnim telefonima dok su u teretani.
-
-Molim te generiši funkcionalan prototip sa funkcionalnim UI komponentama, mock podacima i navigacijom između ovih stranica.
-
-This project was built with [Lovable](https://lovable.dev).
-
-## Build with Lovable
-
-Continue developing this project in the [Lovable editor](https://lovable.dev/projects/4fc9a6cc-3e6c-49c6-999e-488a508860b8).
-
-- **Ship faster**: describe what you want to build and Lovable handles the code.
-- **Stay in sync**: every change made in Lovable is committed straight to this repository.
-- **Full ownership**: this code is yours. Push to `main` on GitHub and your changes sync back into Lovable, ready for your next prompt.
-
-## Development
-
-Prefer working locally? You need Node.js and npm — [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating).
-
-```sh
-git clone <this-repository-url>
-cd <repository-name>
-npm i
-npm run dev
-```
+- Uključiti potvrdu email adrese (u demo fazi je isključena).
+- Povezati pravi domen i po želji preimenovati Lovable adresu.
+- Pokrenuti novu bezbednosnu proveru pre nego što link dobije veći broj testera.
