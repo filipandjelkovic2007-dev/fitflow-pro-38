@@ -282,7 +282,7 @@ export function AuthForm({ mode }: { mode: "login" | "register" }) {
           </div>
           {formError && <p className="text-sm text-destructive">{formError}</p>}
           <Button type="submit" disabled={loading} className="w-full rounded-full font-bold">
-            {loading ? "Sačekaj…" : isRegister ? "Registruj se" : "Prijavi se"}
+            {loading ? "Sačekaj…" : isRegister ? "Registruj se" : "Uloguj se"}
           </Button>
         </form>
 
@@ -291,7 +291,7 @@ export function AuthForm({ mode }: { mode: "login" | "register" }) {
             <>
               Već imaš nalog?{" "}
               <Link to="/prijava" className="font-semibold text-primary">
-                Prijavi se
+                Uloguj se
               </Link>
             </>
           ) : (
