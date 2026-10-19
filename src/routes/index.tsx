@@ -78,16 +78,16 @@ function Landing() {
         </p>
         <div className="mt-8 flex flex-col gap-3 sm:flex-row">
           <Link
-            to="/registracija"
+            to="/prijava"
             className="glow-neon inline-flex items-center justify-center rounded-full bg-primary px-7 py-3 text-base font-bold text-primary-foreground transition-transform hover:scale-[1.02]"
           >
-            Registruj se
+            Prijavi se
           </Link>
           <Link
-            to="/prijava"
+            to="/registracija"
             className="inline-flex items-center justify-center rounded-full border border-border px-7 py-3 text-base font-semibold text-foreground transition-colors hover:bg-secondary"
           >
-            Prijavi se
+            Registruj se
           </Link>
         </div>
 
