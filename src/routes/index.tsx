@@ -59,7 +59,7 @@ function Landing() {
           to="/prijava"
           className="rounded-full px-4 py-2 text-sm font-semibold text-muted-foreground transition-colors hover:text-foreground"
         >
-          Prijavi se
+          Uloguj se
         </Link>
       </header>
 
@@ -81,7 +81,7 @@ function Landing() {
             to="/prijava"
             className="glow-neon inline-flex items-center justify-center rounded-full bg-primary px-7 py-3 text-base font-bold text-primary-foreground transition-transform hover:scale-[1.02]"
           >
-            Prijavi se
+            Uloguj se
           </Link>
           <Link
             to="/registracija"
