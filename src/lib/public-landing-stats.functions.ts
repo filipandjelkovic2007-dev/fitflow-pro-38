@@ -6,9 +6,8 @@ export type PublicLandingStats = {
   averageDurationMinutes: number | null;
 };
 
-// The homepage is public, so its aggregate statistics only include athletes
-// who have chosen to make their profiles public. No profile or workout rows
-// are returned to the browser.
+// The homepage exposes only aggregate totals. It never returns profile or workout rows,
+// so private users' individual data remains hidden while contributing to the totals.
 export const getPublicLandingStats = createServerFn({ method: "GET" }).handler(async () => {
   // Load the service-role client only inside the server handler. Never include
   // server credentials in the client bundle.
@@ -16,7 +15,7 @@ export const getPublicLandingStats = createServerFn({ method: "GET" }).handler(a
   const { data, error } = await supabaseAdmin.rpc("get_public_landing_stats");
 
   if (error) {
-    throw new Error("Could not load public landing statistics.");
+    throw new Error("Could not load landing statistics.");
   }
 
   const stats = data?.[0];

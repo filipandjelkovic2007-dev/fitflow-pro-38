@@ -67,8 +67,8 @@ function Landing() {
   }, []);
 
   const statCards = [
-    [stats ? stats.publicAthletes.toLocaleString("sr-RS") : "—", "javnih vežbača"],
-    [stats ? stats.publicWorkouts.toLocaleString("sr-RS") : "—", "treninga javnih profila"],
+    [stats ? stats.publicAthletes.toLocaleString("sr-RS") : "—", "registrovanih vežbača"],
+    [stats ? stats.publicWorkouts.toLocaleString("sr-RS") : "—", "sačuvanih treninga"],
     [
       stats?.averageDurationMinutes == null
         ? "—"
