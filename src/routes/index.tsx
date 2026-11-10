@@ -1,5 +1,8 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Activity, Dumbbell, LineChart, Timer } from "lucide-react";
+import { useEffect, useState } from "react";
+
+import { getPublicLandingStats, type PublicLandingStats } from "@/lib/public-landing-stats.functions";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -46,6 +49,34 @@ const FEATURES = [
 ];
 
 function Landing() {
+  const [stats, setStats] = useState<PublicLandingStats | null>(null);
+
+  useEffect(() => {
+    let active = true;
+    void getPublicLandingStats()
+      .then((currentStats) => {
+        if (active) setStats(currentStats);
+      })
+      .catch(() => {
+        if (active) setStats(null);
+      });
+
+    return () => {
+      active = false;
+    };
+  }, []);
+
+  const statCards = [
+    [stats ? stats.publicAthletes.toLocaleString("sr-RS") : "—", "javnih vežbača"],
+    [stats ? stats.publicWorkouts.toLocaleString("sr-RS") : "—", "treninga javnih profila"],
+    [
+      stats?.averageDurationMinutes == null
+        ? "—"
+        : `${Math.round(stats.averageDurationMinutes).toLocaleString("sr-RS")} min`,
+      "prosečno trajanje treninga",
+    ],
+  ];
+
   return (
     <div className="min-h-screen">
       <header className="mx-auto flex max-w-5xl items-center justify-between px-4 py-5">
@@ -92,14 +123,10 @@ function Landing() {
         </div>
 
         <dl className="mt-14 grid grid-cols-3 gap-3">
-          {[
-            ["12k+", "unetih serija"],
-            ["98%", "vraća se nedeljno"],
-            ["3 min", "prosečan unos"],
-          ].map(([v, l]) => (
-            <div key={l} className="surface-card p-4">
-              <dt className="text-2xl font-black text-primary sm:text-3xl">{v}</dt>
-              <dd className="mt-1 text-xs text-muted-foreground sm:text-sm">{l}</dd>
+          {statCards.map(([value, label]) => (
+            <div key={label} className="surface-card p-4">
+              <dt className="text-2xl font-black text-primary sm:text-3xl">{value}</dt>
+              <dd className="mt-1 text-xs text-muted-foreground sm:text-sm">{label}</dd>
             </div>
           ))}
         </dl>
